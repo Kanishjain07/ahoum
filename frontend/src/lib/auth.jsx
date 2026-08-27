@@ -42,6 +42,20 @@ export function AuthProvider({ children }) {
     return data;
   }, []);
 
+  const passwordLogin = useCallback(async (username, password) => {
+    const data = await api.post('/auth/login/', { username, password });
+    tokens.set(data);
+    setUser(data.user);
+    return data;
+  }, []);
+
+  const passwordRegister = useCallback(async (username, email, password, role) => {
+    const data = await api.post('/auth/register/', { username, email, password, role });
+    tokens.set(data);
+    setUser(data.user);
+    return data;
+  }, []);
+
   const signOut = useCallback(() => {
     tokens.clear();
     setUser(null);
@@ -49,7 +63,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, loading, signIn, signOut, reload: loadUser }}
+      value={{ user, setUser, loading, signIn, passwordLogin, passwordRegister, signOut, reload: loadUser }}
     >
       {children}
     </AuthContext.Provider>

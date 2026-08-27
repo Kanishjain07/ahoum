@@ -145,3 +145,60 @@ class MeView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(UserSerializer(request.user).data)
+
+
+class RegisterView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        username = request.data.get("username", "").strip()
+        email = request.data.get("email", "").strip()
+        password = request.data.get("password", "").strip()
+        requested_role = request.data.get("role", Role.USER)
+
+        if not username:
+            raise ValidationError({"detail": "Username or handle is required."})
+        if not password:
+            raise ValidationError({"detail": "Password is required."})
+
+        if User.objects.filter(username__iexact=username).exists():
+            raise ValidationError({"detail": "Username is already taken."})
+
+        if email and User.objects.filter(email__iexact=email).exists():
+            raise ValidationError({"detail": "Email is already registered."})
+
+        with transaction.atomic():
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+                display_name=username.replace("-", " ").replace("_", " ").title(),
+                role=requested_role if requested_role in Role.values else Role.USER,
+                role_chosen=True,
+            )
+
+        data = issue_tokens(user)
+        data["created"] = True
+        return Response(data, status=status.HTTP_201_CREATED)
+
+
+class PasswordLoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        identifier = request.data.get("username", "").strip()
+        password = request.data.get("password", "").strip()
+
+        if not identifier or not password:
+            raise ValidationError({"detail": "Username/email and password are required."})
+
+        # Allow logging in with either username or email
+        user = User.objects.filter(username__iexact=identifier).first()
+        if not user and "@" in identifier:
+            user = User.objects.filter(email__iexact=identifier).first()
+
+        if not user or not user.check_password(password):
+            raise ValidationError({"detail": "Invalid username/email or password."})
+
+        data = issue_tokens(user)
+        return Response(data, status=status.HTTP_200_OK)

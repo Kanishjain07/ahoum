@@ -4,6 +4,8 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from . import views
 
 urlpatterns = [
+    path("register/", views.RegisterView.as_view(), name="register"),
+    path("login/", views.PasswordLoginView.as_view(), name="password-login"),
     path("providers/", views.providers, name="providers"),
     path("<str:provider>/login-url/", views.login_url, name="login-url"),
     path(

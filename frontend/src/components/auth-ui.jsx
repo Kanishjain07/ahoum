@@ -63,55 +63,94 @@ export function ProviderButton({ provider, onClick, busy, disabled, children }) 
  */
 export function AuthShell({ eyebrow, headline, points, children, footer }) {
   return (
-    <div className="flex min-h-screen flex-col lg:flex-row">
-      <MeshPanel
-        seed={0}
-        className="hidden flex-col justify-between p-2xl text-on-primary lg:flex lg:w-[46%] xl:w-[42%]"
-      >
-        <Link to="/" className="relative z-10 flex items-center gap-sm text-headline-md font-extrabold">
-          <Icon name="calendar-check" size={26} />
+    <div className="flex min-h-screen flex-col lg:flex-row bg-[#fafafa]">
+      {/* Left Column: Aesthetic Dark Emerald Editorial Panel */}
+      <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-[#06241b] via-[#0b382c] to-[#144f3e] p-12 text-white lg:flex lg:w-[46%] xl:w-[42%] shadow-2xl">
+        {/* Ambient Subtle Radial Glow */}
+        <div className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-emerald-500/20 blur-[100px]" />
+        <div className="pointer-events-none absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-teal-400/10 blur-[100px]" />
+
+        {/* Brand Header */}
+        <Link to="/" className="relative z-10 flex items-center gap-2.5 text-2xl font-extrabold tracking-tight text-white">
+          <Icon name="calendar-check" size={28} className="text-emerald-400" />
           BookSync
         </Link>
 
-        <div className="relative z-10 max-w-md">
-          <p className="mb-md text-label-md uppercase tracking-[0.18em] text-primary-fixed">
+        {/* Hero Content */}
+        <div className="relative z-10 my-auto max-w-md py-6">
+          <span className="mb-3 inline-block rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-emerald-300 backdrop-blur-md">
             {eyebrow}
-          </p>
-          <h1 className="text-display leading-[1.05] text-on-primary">{headline}</h1>
-          <ul className="mt-2xl space-y-lg">
+          </span>
+          <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-white md:text-4xl">
+            {headline}
+          </h1>
+
+          {/* User & Creator Experience Demo Video */}
+          <div className="mt-6 overflow-hidden rounded-2xl border border-white/20 bg-slate-950/70 shadow-2xl backdrop-blur-md transition-all duration-300 hover:border-emerald-400/50">
+            <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-950">
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="h-full w-full object-cover opacity-85 transition-transform duration-700 hover:scale-105"
+                poster="https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80"
+              >
+                <source
+                  src="https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-code-41549-large.mp4"
+                  type="video/mp4"
+                />
+              </video>
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
+              <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-slate-900/85 px-2.5 py-1 text-[11px] font-bold text-emerald-300 backdrop-blur-md border border-white/10 shadow-lg">
+                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+                DEMO • PLATFORM WORKFLOW
+              </span>
+              <div className="absolute bottom-3 left-3 right-3">
+                <p className="text-xs font-bold text-white">How Creators List & Users Experience Live Sessions</p>
+                <p className="text-[11px] text-slate-300 leading-tight">Instant seat booking, live video masterclasses & roster management.</p>
+              </div>
+            </div>
+          </div>
+
+          <ul className="mt-6 space-y-4">
             {points.map((point) => (
-              <li key={point.title} className="flex gap-md">
-                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-on-primary/10 text-primary-fixed ring-1 ring-inset ring-on-primary/20">
-                  <Icon name={point.icon} size={18} />
+              <li key={point.title} className="flex gap-3 items-start">
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10 text-emerald-300 ring-1 ring-inset ring-white/15 backdrop-blur-md">
+                  <Icon name={point.icon} size={16} />
                 </span>
-                <span>
-                  <span className="block text-label-md text-on-primary">{point.title}</span>
-                  <span className="mt-1 block text-body-sm text-on-primary/70">
+                <div>
+                  <span className="block text-sm font-bold text-white">{point.title}</span>
+                  <span className="block text-xs text-emerald-100/70 leading-relaxed">
                     {point.body}
                   </span>
-                </span>
+                </div>
               </li>
             ))}
           </ul>
         </div>
 
-        <p className="relative z-10 text-body-sm text-on-primary/60">
-          © {new Date().getFullYear()} BookSync
+        {/* Footer info */}
+        <p className="relative z-10 text-xs font-medium text-emerald-200/60">
+          © {new Date().getFullYear()} BookSync. All rights reserved.
         </p>
-      </MeshPanel>
+      </div>
 
-      <div className="flex flex-1 items-center justify-center bg-surface px-margin_mobile py-2xl md:px-margin_desktop">
-        <div className="w-full max-w-[440px]">
+      {/* Right Column: Clean Minimalist Form Area */}
+      <div className="flex flex-1 items-center justify-center px-4 py-12 md:px-8">
+        <div className="w-full max-w-[460px]">
           <Link
             to="/"
-            className="mb-xl flex items-center justify-center gap-sm text-headline-md font-extrabold text-primary lg:hidden"
+            className="mb-8 flex items-center justify-center gap-2 text-2xl font-extrabold text-[#0b382c] lg:hidden"
           >
-            <Icon name="calendar-check" size={24} />
+            <Icon name="calendar-check" size={26} />
             BookSync
           </Link>
-          <Card className="p-lg shadow-md md:p-xl">{children}</Card>
+          <div className="rounded-2xl border border-slate-200/90 bg-white p-8 md:p-10 shadow-xl">
+            {children}
+          </div>
           {footer && (
-            <p className="mt-lg text-center text-body-sm text-on-surface-variant">{footer}</p>
+            <p className="mt-6 text-center text-sm font-medium text-slate-600">{footer}</p>
           )}
         </div>
       </div>
@@ -137,7 +176,7 @@ export function RoleChooser({ value, onChange, className }) {
   ];
 
   return (
-    <div className={cx('grid gap-sm sm:grid-cols-2', className)} role="radiogroup">
+    <div className={cx('grid gap-3 sm:grid-cols-2', className)} role="radiogroup">
       {options.map((option) => {
         const selected = value === option.key;
         return (
@@ -148,31 +187,31 @@ export function RoleChooser({ value, onChange, className }) {
             aria-checked={selected}
             onClick={() => onChange(option.key)}
             className={cx(
-              'group relative rounded-xl border p-md text-left transition-all duration-200',
-              'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+              'group relative rounded-2xl border p-4 text-left transition-all duration-200',
+              'focus:outline-none focus:ring-2 focus:ring-[#164e3d] focus:ring-offset-2',
               selected
-                ? 'border-primary bg-primary/[0.06] shadow-sm'
-                : 'border-outline-variant bg-surface-container-lowest hover:-translate-y-px hover:border-outline hover:shadow-sm',
+                ? 'border-[#164e3d] bg-emerald-50/50 shadow-sm'
+                : 'border-slate-200 bg-white hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-sm',
             )}
           >
             <span
               className={cx(
-                'mb-sm flex h-10 w-10 items-center justify-center rounded-lg transition-colors',
+                'mb-3 flex h-10 w-10 items-center justify-center rounded-xl transition-colors',
                 selected
-                  ? 'bg-primary text-on-primary'
-                  : 'bg-surface-container-high text-on-surface-variant',
+                  ? 'bg-[#164e3d] text-white shadow-sm'
+                  : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200',
               )}
             >
               <Icon name={option.icon} size={20} />
             </span>
-            <span className="block text-label-md text-on-surface">{option.title}</span>
-            <span className="mt-1 block text-body-sm text-on-surface-variant">{option.body}</span>
+            <span className="block text-sm font-bold text-slate-900">{option.title}</span>
+            <span className="mt-1 block text-xs text-slate-500 leading-relaxed">{option.body}</span>
             <span
               className={cx(
-                'absolute right-md top-md flex h-5 w-5 items-center justify-center rounded-full border transition-all',
+                'absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full border transition-all',
                 selected
-                  ? 'border-primary bg-primary text-on-primary'
-                  : 'border-outline-variant bg-transparent text-transparent',
+                  ? 'border-[#164e3d] bg-[#164e3d] text-white'
+                  : 'border-slate-300 bg-transparent text-transparent',
               )}
             >
               <Icon name="check" size={12} />

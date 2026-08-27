@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthShell, Divider, ProviderButton, RoleChooser } from '../components/auth-ui';
 import Icon from '../components/Icon';
 import { Banner, Button, Field } from '../components/ui';
+import { useAuth } from '../lib/auth';
 import { useOAuthProviders } from '../lib/useOAuthProviders';
 
 const POINTS = [
@@ -19,7 +20,7 @@ const POINTS = [
   {
     icon: 'lock',
     title: 'Sign in with an account you already have',
-    body: 'Google or GitHub. No password to remember or lose.',
+    body: 'Google or GitHub. Password or OAuth.',
   },
 ];
 
@@ -29,6 +30,26 @@ export default function Signup() {
   const from = location.state?.from || '/';
   const [role, setRole] = useState('user');
   const auth = useOAuthProviders({ from, role });
+  const { passwordRegister } = useAuth();
+
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passError, setPassError] = useState(null);
+  const [busy, setBusy] = useState(false);
+
+  async function handlePasswordSubmit(e) {
+    e.preventDefault();
+    setPassError(null);
+    setBusy(true);
+    try {
+      await passwordRegister(username, email, password, role);
+      navigate(from, { replace: true });
+    } catch (err) {
+      setPassError(err.message || 'Registration failed.');
+      setBusy(false);
+    }
+  }
 
   return (
     <AuthShell
@@ -38,51 +59,79 @@ export default function Signup() {
       footer={
         <>
           Already have an account?{' '}
-          <Link to="/login" state={{ from }} className="text-primary hover:underline">
+          <Link to="/login" state={{ from }} className="font-semibold text-emerald-800 hover:underline">
             Sign in
           </Link>
         </>
       }
     >
       <div className="mb-lg">
-        <h2 className="text-headline-md text-on-surface">Get started</h2>
-        <p className="mt-xs text-body-sm text-on-surface-variant">
+        <h2 className="text-2xl font-bold text-slate-900">Get started</h2>
+        <p className="mt-xs text-sm text-slate-500">
           First, how do you want to use BookSync? You can change this later.
         </p>
       </div>
 
       <RoleChooser value={role} onChange={setRole} className="mb-lg" />
 
-      {auth.error && (
+      {(auth.error || passError) && (
         <div className="mb-md">
-          <Banner kind="error">{auth.error}</Banner>
+          <Banner kind="error">{auth.error || passError}</Banner>
         </div>
       )}
 
-      {auth.ready && auth.providers.length === 0 && (
-        <Banner kind="info" title="No OAuth provider configured">
-          Add GOOGLE_CLIENT_ID / GITHUB_CLIENT_ID to .env to enable
-          single sign-on. The dev sign-in below works either way.
-        </Banner>
+      {auth.ready && auth.providers.length > 0 && (
+        <div className="space-y-sm mb-md">
+          {auth.providers.map((provider) => (
+            <ProviderButton
+              key={provider.key}
+              provider={provider.key}
+              busy={auth.pending === provider.key}
+              disabled={Boolean(auth.pending)}
+              onClick={() => auth.startOAuth(provider.key)}
+            >
+              Sign up with {provider.label}
+            </ProviderButton>
+          ))}
+        </div>
       )}
 
-      <div className="space-y-sm">
-        {auth.providers.map((provider) => (
-          <ProviderButton
-            key={provider.key}
-            provider={provider.key}
-            busy={auth.pending === provider.key}
-            disabled={Boolean(auth.pending)}
-            onClick={() => auth.startOAuth(provider.key)}
-          >
-            Sign up with {provider.label}
-          </ProviderButton>
-        ))}
-      </div>
+      <form onSubmit={handlePasswordSubmit} className="space-y-md">
+        {auth.providers.length > 0 && <Divider>or sign up with password</Divider>}
+        <Field
+          label="Username / ID"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+        <Field
+          label="Email (optional)"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <Field
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <Button
+          type="submit"
+          size="lg"
+          className="bg-[#164e3d] text-white hover:bg-emerald-800"
+          loading={busy}
+          disabled={!username.trim() || !password.trim() || busy}
+          iconAfter="arrow-right"
+        >
+          Create {role === 'creator' ? 'creator' : 'user'} account
+        </Button>
+      </form>
 
       {auth.devSignIn && (
         <>
-          <Divider>or local dev sign-up</Divider>
+          <Divider>or local dev handle</Divider>
           <form
             onSubmit={(event) => {
               event.preventDefault();
@@ -93,10 +142,10 @@ export default function Signup() {
             className="space-y-md"
           >
             <Field
-              label="Handle"
+              label="Dev Handle"
               value={auth.handle}
               onChange={(event) => auth.setHandle(event.target.value)}
-              hint="Available while DEV_FAKE_OAUTH=True. Creates the account if it is new."
+              hint="Available while DEV_FAKE_OAUTH=True."
             />
             <Button
               type="submit"
@@ -106,16 +155,16 @@ export default function Signup() {
               disabled={!auth.handle.trim() || Boolean(auth.pending)}
               iconAfter="arrow-right"
             >
-              Create {role === 'creator' ? 'creator' : 'user'} account
+              Quick Dev Sign-in as {auth.handle.trim() || 'user'}
             </Button>
           </form>
         </>
       )}
 
-      <p className="mt-lg flex items-start gap-xs text-label-sm text-on-surface-variant">
+      <p className="mt-lg flex items-start gap-xs text-xs text-slate-500">
         <Icon name="info" size={14} className="mt-0.5 shrink-0" />
         Your role is applied when the account is created. Sending it again later
-        will not change an existing account — the API only honours it on sign-up.
+        will not change an existing account.
       </p>
     </AuthShell>
   );
