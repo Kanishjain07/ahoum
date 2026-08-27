@@ -197,12 +197,8 @@ at 1440px and 390px.
 
 ## Known limitations
 
-- **Role upgrade is self-service.** Anyone can become a creator from their
-  profile. Real onboarding (review, payouts, admin grant) is out of scope;
-  enforcement of what a creator may do is not (DECISIONS.md #4).
-- **`DEV_FAKE_OAUTH` is a real backdoor.** It exists so this can be reviewed
-  without registering an OAuth app. `False` by default in `settings.py`; it
-  must never be `True` anywhere real.
+- **Role selection is locked upon account creation.** Users choose their role (**User / Learner** or **Host / Creator**) during sign-up or initial onboarding. Once set (`role_chosen = True`), roles are permanently locked by `ProfileUpdateSerializer` to maintain strict role isolation.
+- **`DEV_FAKE_OAUTH` is a fenced dev sign-in.** It exists so this can be reviewed immediately without setting up OAuth credentials. `False` by default in `settings.py`; it must stay `False` in any production environment.
 - **`seats_taken` is denormalised.** Protected by a CHECK constraint and a
   single mutation path, but it duplicates `COUNT(active bookings)` and could
   drift if a future code path bypasses `services.py`. No reconciliation job

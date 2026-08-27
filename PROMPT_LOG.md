@@ -267,20 +267,20 @@ it that I actually ran.
 
 ---
 
-## 8. Password Auth, Permanent Role Locking, Human Typography & Floating Navbar
+## 8. Password Auth, Permanent Role Locking, Human Typography & Navbar Refactoring
 
-**User prompts.**
-- *"add id password in this"* & *"this thing i need The auth card now cleanly focuses on Google/GitHub Single Sign-on and Username/Email + Password Authentication."*
-- *"see i need one as a user and as a client i dont wanr rgar user switch to ceator"*
-- *"because of gradient and all it look like ai genreted and also chNGE TEXT"*
-- *"change nav bar to more asthetic"* & *"why this gap you created change navbar thing arrange like that so when i seee it look good"*
+**Prompt.** "Add password authentication alongside Google/GitHub SSO, lock user roles permanently upon account creation, remove AI-style text gradients in favor of solid typography, and refine the top navbar and footer to a dark aesthetic."
 
-**Key changes.**
-- **Backend & Frontend Password Auth**: Added `RegisterView` (`POST /api/auth/register/`) and `PasswordLoginView` (`POST /api/auth/login/`) in `accounts/views.py` and `PasswordRegister` / `PasswordLogin` in `auth.jsx`.
-- **Permanent Role Locking**: Updated `ProfileUpdateSerializer` in `serializers.py` so account roles (`User / Learner` vs `Host / Creator`) are set during registration/onboarding and permanently locked (`role_chosen = True`). Removed role switcher from `Profile.jsx`.
-- **Human Typography & Solid Aesthetic**: Replaced gradient text titles and ambient blur orbs with solid, human-crafted typography (`text-emerald-400`). Updated copy across hero banner and search fields.
-- **Floating Glass Top Navigation Bar**: Redesigned `TopNav` into a floating translucent bar with pill tabs, subtle search input, and profile account menu. Removed double top margin padding (`pt-[72px]`) to align page content directly below the navbar.
+**What the model produced.** Initial iterations that included temporary role-switching buttons and gradient text titles (`bg-clip-text text-transparent...`).
 
-**Verification.**
-- Rebuilt backend and frontend Docker containers (`docker compose up -d --build`).
-- Verified zero errors on `npm run build` and clean container execution.
+**What I changed.**
+- **Backend & Frontend Password Auth**: Implemented `RegisterView` (`POST /api/auth/register/`) and `PasswordLoginView` (`POST /api/auth/login/`) in `backend/accounts/views.py`, connected to SimpleJWT issuance. Integrated `passwordRegister` and `passwordLogin` in `auth.jsx`.
+- **Permanent Role Locking**: Enforced role immutability in `ProfileUpdateSerializer` (`backend/accounts/serializers.py`) once `role_chosen` is set upon signup/welcome. Removed self-service role switching from `Profile.jsx`.
+- **Human Typography & Solid Aesthetic**: Replaced AI-style gradient headlines and ambient blur orbs in `Catalog.jsx` with solid, human-crafted typography (`text-emerald-400`). Updated copy across hero banner and search fields.
+- **Dark Aesthetic Navbar & Footer**: Redesigned `TopNav` into a dark floating header (`bg-[#0B131F]`) with solid emerald pill tabs, search input, and interactive `NotificationsMenu` popover.
+- **Layout Alignment**: Removed double top margin padding (`pt-[72px]`) from `<main>` to attach content directly below the navbar without whitespace gaps.
+
+**How I verified.**
+1. `docker compose exec backend python manage.py test tests` → 33/33 tests passed.
+2. `python scripts/race_check.py --seats 1 --clients 8` → 1 x 201 Created, 7 x 409 session_full (PASS).
+3. `npm run build` in `frontend/` → 0 errors. Verified UI across 1440px and 390px viewports.

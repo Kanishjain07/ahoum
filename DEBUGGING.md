@@ -241,7 +241,7 @@ question the API could not answer.
 
 | Check | Command | Result |
 |---|---|---|
-| Unit + auth + booking tests | `docker compose exec backend python manage.py test tests` | 25 passed |
+| Unit + auth + booking tests | `docker compose exec backend python manage.py test tests` | 33 passed |
 | Race, service layer, 8 threads / 1 seat | included above | 1 confirmed, 7 × `session_full` |
 | Race, live HTTP through Nginx + Gunicorn | `python scripts/race_check.py --seats 1 --clients 8` | `1 x 201`, `7 x 409 session_full`, PASS |
 | Race, live HTTP, 15 clients / 3 seats | `python scripts/race_check.py --seats 3 --clients 15` | `3 x 201`, `12 x 409`, PASS |
