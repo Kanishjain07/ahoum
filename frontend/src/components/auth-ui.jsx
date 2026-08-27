@@ -65,7 +65,7 @@ export function AuthShell({ eyebrow, headline, points, children, footer }) {
   return (
     <div className="flex min-h-screen flex-col lg:flex-row bg-[#fafafa]">
       {/* Left Column: Aesthetic Dark Emerald Editorial Panel */}
-      <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-[#06241b] via-[#0b382c] to-[#144f3e] p-12 text-white lg:flex lg:w-[46%] xl:w-[42%] shadow-2xl">
+      <div className="relative hidden flex-col justify-center gap-6 overflow-hidden bg-gradient-to-br from-[#06241b] via-[#0b382c] to-[#144f3e] p-8 lg:p-12 text-white lg:flex lg:w-[46%] xl:w-[42%] shadow-2xl">
         {/* Ambient Subtle Radial Glow */}
         <div className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-emerald-500/20 blur-[100px]" />
         <div className="pointer-events-none absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-teal-400/10 blur-[100px]" />
@@ -76,8 +76,18 @@ export function AuthShell({ eyebrow, headline, points, children, footer }) {
           BookSync
         </Link>
 
-        {/* Demo Video Showcase - Positioned directly under BookSync */}
-        <div className="relative z-10 my-4 overflow-hidden rounded-2xl border border-white/20 bg-slate-950/70 shadow-2xl backdrop-blur-md transition-all duration-300 hover:border-emerald-400/50">
+        {/* Eyebrow & Title */}
+        <div className="relative z-10 max-w-md space-y-2">
+          <span className="inline-block rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-emerald-300 backdrop-blur-md">
+            {eyebrow}
+          </span>
+          <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-white md:text-4xl">
+            {headline}
+          </h1>
+        </div>
+
+        {/* Demo Video Showcase */}
+        <div className="relative z-10 max-w-md overflow-hidden rounded-2xl border border-white/20 bg-slate-950/70 shadow-2xl backdrop-blur-md transition-all duration-300 hover:border-emerald-400/50">
           <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-950">
             <video
               autoPlay
@@ -104,53 +114,44 @@ export function AuthShell({ eyebrow, headline, points, children, footer }) {
           </div>
         </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 max-w-md py-2">
-          <span className="mb-2 inline-block rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-emerald-300 backdrop-blur-md">
-            {eyebrow}
-          </span>
-          <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-white md:text-4xl">
-            {headline}
-          </h1>
-
-          <ul className="mt-5 space-y-3.5">
-            {points.map((point) => (
-              <li key={point.title} className="flex gap-3 items-start">
-                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/10 text-emerald-300 ring-1 ring-inset ring-white/15 backdrop-blur-md">
-                  <Icon name={point.icon} size={15} />
+        {/* Feature Points */}
+        <ul className="relative z-10 max-w-md space-y-3">
+          {points.map((point) => (
+            <li key={point.title} className="flex gap-3 items-start">
+              <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/10 text-emerald-300 ring-1 ring-inset ring-white/15 backdrop-blur-md">
+                <Icon name={point.icon} size={15} />
+              </span>
+              <div>
+                <span className="block text-sm font-bold text-white">{point.title}</span>
+                <span className="block text-xs text-emerald-100/70 leading-relaxed">
+                  {point.body}
                 </span>
-                <div>
-                  <span className="block text-sm font-bold text-white">{point.title}</span>
-                  <span className="block text-xs text-emerald-100/70 leading-relaxed">
-                    {point.body}
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+              </div>
+            </li>
+          ))}
+        </ul>
 
         {/* Footer info */}
-        <p className="relative z-10 text-xs font-medium text-emerald-200/60">
+        <p className="relative z-10 text-xs font-medium text-emerald-200/60 pt-2">
           © {new Date().getFullYear()} BookSync. All rights reserved.
         </p>
       </div>
 
       {/* Right Column: Clean Minimalist Form Area */}
-      <div className="flex flex-1 items-center justify-center px-4 py-12 md:px-8">
-        <div className="w-full max-w-[460px]">
+      <div className="flex flex-1 items-center justify-center px-4 py-8 md:px-8">
+        <div className="w-full max-w-[440px]">
           <Link
             to="/"
-            className="mb-8 flex items-center justify-center gap-2 text-2xl font-extrabold text-[#0b382c] lg:hidden"
+            className="mb-6 flex items-center justify-center gap-2 text-2xl font-extrabold text-[#0b382c] lg:hidden"
           >
             <Icon name="calendar-check" size={26} />
             BookSync
           </Link>
-          <div className="rounded-2xl border border-slate-200/90 bg-white p-8 md:p-10 shadow-xl">
+          <div className="rounded-2xl border border-slate-200/90 bg-white p-6 md:p-8 shadow-xl">
             {children}
           </div>
           {footer && (
-            <p className="mt-6 text-center text-sm font-medium text-slate-600">{footer}</p>
+            <p className="mt-5 text-center text-sm font-medium text-slate-600">{footer}</p>
           )}
         </div>
       </div>
