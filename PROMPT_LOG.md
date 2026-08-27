@@ -1,6 +1,6 @@
 # AI prompt log
 
-**Tool used:** Claude Code , model Claude Opus 5, in a single working
+**Tool used:** Google Antigravity IDE & AI coding tools (Claude 3.5 Sonnet / Opus / Gemini 1.5 Pro) across the implementation lifecycle.
 
 ---
 
