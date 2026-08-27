@@ -60,7 +60,7 @@ function Hero({ sessions, query, onSearch }) {
           loop
           muted={isMuted}
           playsInline
-          className="absolute inset-0 h-full w-full object-cover opacity-40 filter brightness-90 saturate-110"
+          className="absolute inset-0 h-full w-full object-cover opacity-75 filter brightness-105 saturate-125 transition-opacity duration-1000"
           poster="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80"
         >
           <source
@@ -71,10 +71,14 @@ function Hero({ sessions, query, onSearch }) {
             src="https://assets.mixkit.co/videos/preview/mixkit-hands-typing-on-a-computer-keyboard-41584-large.mp4"
             type="video/mp4"
           />
+          <source
+            src="https://assets.mixkit.co/videos/preview/mixkit-man-holding-a-smartphone-and-typing-on-a-laptop-41582-large.mp4"
+            type="video/mp4"
+          />
         </video>
 
-        {/* Clean Vignette Overlay */}
-        <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[1px]" />
+        {/* Dynamic Translucent Vignette Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/50 via-slate-950/65 to-slate-950/90 backdrop-blur-[0.5px]" />
 
         <div className="relative z-10 mx-auto max-w-4xl">
           {/* Live Badge */}
@@ -318,7 +322,7 @@ export default function Catalog() {
     <Layout fullBleed>
       <Hero sessions={sessions} query={query} onSearch={search} />
 
-      <div className="mx-auto max-w-content px-margin_mobile md:px-margin_desktop">
+      <div id="catalog-list" className="mx-auto max-w-content px-margin_mobile md:px-margin_desktop pt-4 scroll-mt-24">
         {/* Section Header matching Screenshot 2 */}
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4 pt-4">
           <div>

@@ -263,7 +263,18 @@ function TopNav() {
         <div className="flex items-center gap-6">
           <Brand />
           <nav className="hidden items-center gap-2 md:flex">
-            <NavLink to="/" end className={navClass}>
+            <NavLink
+              to="/"
+              end
+              className={navClass}
+              onClick={(e) => {
+                const element = document.getElementById('catalog-list');
+                if (location.pathname === '/' && element) {
+                  e.preventDefault();
+                  element.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+            >
               Catalog
             </NavLink>
             {user && (
