@@ -302,38 +302,31 @@ function monogram(text = '') {
   return (words[0][0] + (words[1]?.[0] ?? words[0][1] ?? '')).toUpperCase();
 }
 
-/** Cover art: the creator's image if they gave one, otherwise generated
- *  artwork — mesh + monogram — that is stable for a given session. */
-export function Cover({ session, className, children, monogramSize = '46%' }) {
-  const palette = paletteFor(session.id);
+const FALLBACK_IMAGES = [
+  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1542744094-3a317272018a?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80',
+];
+
+export function Cover({ session, className, children }) {
   const [failed, setFailed] = useState(false);
-  const showImage = Boolean(session.cover_url) && !failed;
+
+  // Pick cover URL if available, else pick deterministic high quality fallback photo
+  const fallbackSrc = FALLBACK_IMAGES[Math.abs(Number(session?.id) || 0) % FALLBACK_IMAGES.length];
+  const imgSrc = session?.cover_url && !failed ? session.cover_url : fallbackSrc;
 
   return (
-    <div
-      className={cx('relative overflow-hidden bg-surface-container', className)}
-      style={
-        showImage
-          ? undefined
-          : { backgroundImage: `${TEXTURE}, ${palette.lights}, ${palette.base}` }
-      }
-    >
-      {showImage ? (
-        <img
-          src={session.cover_url}
-          alt=""
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-          onError={() => setFailed(true)}
-        />
-      ) : (
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-[0.22em] right-[0.02em] select-none font-extrabold leading-none tracking-tight text-white opacity-[0.16] mix-blend-overlay transition-transform duration-700 group-hover:scale-105"
-          style={{ fontSize: monogramSize }}
-        >
-          {monogram(session.title)}
-        </span>
-      )}
+    <div className={cx('relative overflow-hidden bg-slate-900', className)}>
+      <img
+        src={imgSrc}
+        alt={session?.title || 'Session cover'}
+        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+        onError={() => setFailed(true)}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent pointer-events-none" />
       {children}
     </div>
   );

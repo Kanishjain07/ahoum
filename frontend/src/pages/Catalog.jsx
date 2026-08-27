@@ -28,7 +28,6 @@ const FILTERS = [
 ];
 
 function Hero({ sessions, query, onSearch }) {
-  const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const videoRef = useRef(null);
@@ -52,127 +51,122 @@ function Hero({ sessions, query, onSearch }) {
 
   return (
     <>
-      <section className="mx-auto mb-12 max-w-4xl pt-6 text-center">
-        {/* Main Title matching Screenshot 1 */}
-        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl lg:text-[3.25rem] leading-tight">
-          Small sessions, taught by people doing the work.
-        </h1>
-
-        {/* Subtitle matching Screenshot 1 */}
-        <p className="mx-auto mt-4 max-w-2xl text-base text-slate-600 md:text-lg leading-relaxed">
-          Join intimate masterclasses and focused workshops led by industry practitioners.
-          Level up your skills with real-world knowledge.
-        </p>
-
-        {/* Search Bar matching Screenshot 1 */}
-        <form
-          onSubmit={(event) => event.preventDefault()}
-          className="mx-auto mt-8 flex max-w-xl items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm focus-within:border-emerald-700 focus-within:ring-2 focus-within:ring-emerald-700/20"
+      <div className="relative mb-12 overflow-hidden rounded-3xl bg-slate-950 px-6 py-12 md:py-16 text-center text-white shadow-2xl">
+        {/* Full-Width Background Video Loop */}
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted={isMuted}
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover opacity-45 filter brightness-90 saturate-125 transition-all duration-700"
+          poster="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80"
         >
-          <div className="flex pl-3 text-slate-400">
-            <Icon name="search" size={20} />
-          </div>
-          <input
-            value={query}
-            onChange={(event) => onSearch(event.target.value)}
-            placeholder="What do you want to learn?"
-            aria-label="Search sessions"
-            className="w-full bg-transparent px-2 py-2 text-base text-slate-900 placeholder:text-slate-400 focus:outline-none"
+          <source
+            src="https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-code-41549-large.mp4"
+            type="video/mp4"
           />
-          {query && (
-            <button
-              type="button"
-              onClick={() => onSearch('')}
-              aria-label="Clear search"
-              className="shrink-0 rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
-            >
-              <Icon name="x" size={16} />
-            </button>
-          )}
-          <Button
-            type="submit"
-            className="shrink-0 rounded-xl bg-[#164e3d] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0f382c]"
+          <source
+            src="https://assets.mixkit.co/videos/preview/mixkit-hands-typing-on-a-computer-keyboard-41584-large.mp4"
+            type="video/mp4"
+          />
+        </video>
+
+        {/* Ambient Overlay Gradient Vignette */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/85 to-slate-950/95 backdrop-blur-[2px]" />
+
+        <div className="relative z-10 mx-auto max-w-4xl">
+          {/* Live Masterclasses Badge */}
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-emerald-300 backdrop-blur-md">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
+            </span>
+            Live Masterclasses & Workshops
+          </div>
+
+          {/* Main Title */}
+          <h1 className="text-4xl font-extrabold tracking-tight text-white md:text-5xl lg:text-[3.5rem] leading-tight">
+            Small sessions, taught by people <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-teal-200 to-white">doing the work.</span>
+          </h1>
+
+          {/* Subtitle */}
+          <p className="mx-auto mt-4 max-w-2xl text-base text-slate-300 md:text-lg leading-relaxed">
+            Join intimate masterclasses and focused workshops led by industry practitioners.
+            Level up your skills with real-world knowledge.
+          </p>
+
+          {/* Search Input Bar */}
+          <form
+            onSubmit={(event) => event.preventDefault()}
+            className="mx-auto mt-8 flex max-w-xl items-center gap-2 rounded-2xl border border-white/20 bg-slate-900/80 p-2 shadow-2xl backdrop-blur-xl transition-all focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-400/30"
           >
-            Find Sessions
-          </Button>
-        </form>
-
-        {/* Hero Video Preview Reel Container */}
-        <div className="group relative mx-auto mt-8 max-w-3xl overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 shadow-md">
-          <div className="relative aspect-[21/9] w-full overflow-hidden">
-            <video
-              ref={videoRef}
-              autoPlay
-              loop
-              muted={isMuted}
-              playsInline
-              className="h-full w-full object-cover filter brightness-90 saturate-110"
-              poster="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1000&q=80"
-            >
-              <source
-                src="https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-code-41549-large.mp4"
-                type="video/mp4"
-              />
-            </video>
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
-
-            {/* Video Badges */}
-            <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-wider text-slate-900 shadow backdrop-blur-md">
-                <span className="h-2 w-2 rounded-full bg-red-600 animate-pulse" />
-                VIDEO INTRO
-              </span>
-              <button
-                onClick={toggleMute}
-                className="rounded-full bg-slate-900/80 p-2 text-white hover:bg-slate-800 backdrop-blur-md"
-                title={isMuted ? 'Unmute' : 'Mute'}
-              >
-                <Icon name={isMuted ? 'volume-x' : 'volume-2'} size={16} />
-              </button>
+            <div className="flex pl-3 text-slate-400">
+              <Icon name="search" size={20} />
             </div>
+            <input
+              value={query}
+              onChange={(event) => onSearch(event.target.value)}
+              placeholder="What do you want to learn?"
+              aria-label="Search sessions"
+              className="w-full bg-transparent px-2 py-2 text-base text-white placeholder:text-slate-400 focus:outline-none"
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => onSearch('')}
+                aria-label="Clear search"
+                className="shrink-0 rounded-full p-1 text-slate-400 hover:bg-white/10 hover:text-white"
+              >
+                <Icon name="x" size={16} />
+              </button>
+            )}
+            <Button
+              type="submit"
+              className="shrink-0 rounded-xl bg-[#164e3d] px-6 py-3 text-sm font-semibold text-white shadow-lg hover:bg-emerald-700"
+            >
+              Find Sessions
+            </Button>
+          </form>
 
-            {/* Center Play Button Overlay */}
+          {/* Watch Masterclass Intro Video Action Pill */}
+          <div className="mt-6 flex items-center justify-center gap-3">
             <button
               onClick={() => setShowModal(true)}
-              className="absolute inset-0 m-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#164e3d] text-white shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-emerald-700"
-              aria-label="Play Masterclass Video"
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-xs font-semibold text-white shadow-lg backdrop-blur-md transition-all hover:bg-white/20 hover:scale-105"
             >
-              <Icon name="play" size={26} className="ml-1 fill-current" />
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-slate-950">
+                <Icon name="play" size={14} className="ml-0.5 fill-current" />
+              </span>
+              Watch Masterclass Preview Video
             </button>
+            <button
+              onClick={toggleMute}
+              className="rounded-full border border-white/20 bg-white/10 p-2.5 text-white hover:bg-white/20 backdrop-blur-md"
+              title={isMuted ? 'Unmute video audio' : 'Mute video audio'}
+            >
+              <Icon name={isMuted ? 'volume-x' : 'volume-2'} size={16} />
+            </button>
+          </div>
 
-            {/* Video Footer Label */}
-            <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-left">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400">Featured Video</p>
-                <p className="text-sm font-bold text-white">System Architecture & Live Coding Masterclass</p>
-              </div>
-              <button
-                onClick={() => setShowModal(true)}
-                className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-300 hover:text-white"
-              >
-                Watch Preview <Icon name="arrow-right" size={14} />
-              </button>
-            </div>
+          {/* Glassmorphic Stats Row */}
+          <div className="mt-12 rounded-2xl border border-white/10 bg-slate-900/60 p-6 shadow-xl backdrop-blur-md">
+            <dl className="grid grid-cols-1 divide-y divide-white/10 md:grid-cols-3 md:divide-y-0 md:divide-x">
+              {stats.map((stat) => (
+                <div key={stat.label} className="flex flex-col items-center py-2 md:py-0">
+                  <dt className="sr-only">{stat.label}</dt>
+                  <dd className="text-3xl font-extrabold text-white md:text-4xl">
+                    {stat.value}
+                  </dd>
+                  <span className="mt-1 text-xs font-semibold tracking-wider text-emerald-300 uppercase">
+                    {stat.label}
+                  </span>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
-
-        {/* Stats Container matching Screenshot 1 */}
-        <div className="mt-10 rounded-2xl bg-slate-100/90 py-6 px-8 shadow-sm border border-slate-200/60">
-          <dl className="grid grid-cols-1 divide-y divide-slate-200 md:grid-cols-3 md:divide-y-0 md:divide-x">
-            {stats.map((stat) => (
-              <div key={stat.label} className="flex flex-col items-center py-2 md:py-0">
-                <dt className="sr-only">{stat.label}</dt>
-                <dd className="text-3xl font-extrabold text-slate-900 md:text-4xl">
-                  {stat.value}
-                </dd>
-                <span className="mt-1 text-xs font-semibold tracking-wider text-slate-500 uppercase">
-                  {stat.label}
-                </span>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
+      </div>
 
       {/* Video Modal Overlay */}
       {showModal && (
