@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    /* Fixed 72px header + 32px breathing room, matching the design's pt-[104px]. */
+    scroll-padding-top: 104px;
+  }
+
+  body {
+    @apply bg-background text-on-background font-sans antialiased relative selection:bg-primary/20 selection:text-primary;
+  }
+
+  /* Ambient website background glow texture */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 100vh;
+    background: 
+      radial-gradient(circle at 15% 15%, rgba(0, 104, 95, 0.08) 0%, transparent 45%),
+      radial-gradient(circle at 85% 35%, rgba(59, 53, 167, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 50% 80%, rgba(137, 245, 231, 0.07) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: -10;
+  }
+
+  /* Floating-label fields: the label lifts when the input is focused or filled.
+     `placeholder=" "` is what makes :placeholder-shown a proxy for "empty". */
+  .field-input {
+    @apply block w-full rounded-lg border border-outline-variant bg-surface-container-lowest
+           px-md pb-2 pt-6 text-body-md text-on-surface shadow-sm transition-all
+           placeholder:text-transparent
+           focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20;
+  }
+
+  .field-label {
+    @apply pointer-events-none absolute left-md top-4 z-10 origin-[0] -translate-y-3 scale-75
+           text-label-md text-on-surface-variant transition-all duration-200
+           peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100
+           peer-placeholder-shown:text-body-md peer-focus:-translate-y-3
+           peer-focus:scale-75 peer-focus:text-primary;
+  }
+
+  .field-error .field-input {
+    @apply border-[1.5px] border-error focus:border-error focus:ring-error/20;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/70 backdrop-blur-md border border-white/40 shadow-lg;
+  }
+  .glass-dark {
+    @apply bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-teal-200 via-emerald-100 to-white;
+  }
+}
+
