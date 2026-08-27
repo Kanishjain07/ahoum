@@ -141,9 +141,26 @@ function TopNav() {
   }
 
   return (
-    <header className="fixed top-0 z-50 flex h-[72px] w-full items-center gap-lg border-b border-surface-variant/70 bg-surface/85 px-margin_mobile shadow-sm backdrop-blur-md md:px-margin_desktop">
-      <div className="mx-auto flex w-full max-w-content items-center gap-lg">
-        <Brand />
+    <header className="fixed top-0 z-50 flex h-[72px] w-full items-center border-b border-slate-200/80 bg-white/95 px-margin_mobile shadow-sm backdrop-blur-md md:px-margin_desktop">
+      <div className="mx-auto flex w-full max-w-content items-center justify-between gap-md">
+        <div className="flex items-center gap-xl">
+          <Brand />
+          <nav className="hidden h-[72px] items-center gap-lg md:flex">
+            <NavLink to="/" end className={navClass}>
+              Explore
+            </NavLink>
+            {user && (
+              <NavLink to="/bookings" className={navClass}>
+                My Bookings
+              </NavLink>
+            )}
+            {user?.role === 'creator' && (
+              <NavLink to="/creator" className={navClass}>
+                Dashboard
+              </NavLink>
+            )}
+          </nav>
+        </div>
 
         <form
           onSubmit={submitSearch}
@@ -152,34 +169,46 @@ function TopNav() {
           <Icon
             name="search"
             size={18}
-            className="pointer-events-none absolute left-3 text-on-surface-variant/70"
+            className="pointer-events-none absolute left-3 text-slate-400"
           />
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search sessions…"
             aria-label="Search sessions"
-            className="w-full rounded-full border border-surface-variant bg-surface-container-low py-2 pl-10 pr-4 text-body-sm text-on-surface transition-all placeholder:text-on-surface-variant/70 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full rounded-full border border-slate-200 bg-slate-50 py-2 pl-10 pr-4 text-body-sm text-slate-900 transition-all placeholder:text-slate-400 focus:border-emerald-700 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-700"
           />
         </form>
 
-        <nav className="ml-auto hidden h-full items-center gap-md md:flex">
-          <NavLink to="/" end className={navClass}>
-            Explore
-          </NavLink>
-          {user && (
-            <NavLink to="/bookings" className={navClass}>
-              My Bookings
-            </NavLink>
+        <div className="flex items-center gap-md">
+          {user?.role === 'creator' ? (
+            <Button
+              as={Link}
+              to="/creator/sessions/new"
+              size="sm"
+              className="rounded-full bg-[#1b4332] px-md py-2 text-label-md font-semibold text-white shadow-sm hover:bg-[#0f2d21]"
+            >
+              List a Session
+            </Button>
+          ) : (
+            <Button
+              as={Link}
+              to="/profile"
+              size="sm"
+              className="rounded-full bg-[#1b4332] px-md py-2 text-label-md font-semibold text-white shadow-sm hover:bg-[#0f2d21]"
+            >
+              List a Session
+            </Button>
           )}
-          {user?.role === 'creator' && (
-            <NavLink to="/creator" className={navClass}>
-              Dashboard
-            </NavLink>
-          )}
-        </nav>
 
-        <div className={cx('flex items-center gap-sm', 'md:ml-md ml-auto md:ml-0')}>
+          <button
+            aria-label="Notifications"
+            className="relative rounded-full p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
+          >
+            <Icon name="bell" size={20} />
+            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-emerald-600" />
+          </button>
+
           <AccountMenu />
         </div>
       </div>

@@ -37,22 +37,11 @@ function Hero({ sessions, query, onSearch }) {
     const seats = sessions.reduce((total, session) => total + session.seats_remaining, 0);
     const hosts = new Set(sessions.map((session) => session.creator.id)).size;
     return [
-      { value: sessions.length ? `${sessions.length}` : '1,200+', label: 'Active Sessions' },
-      { value: seats ? `${seats}` : '50k+', label: 'Seats Booked' },
-      { value: hosts ? `${hosts}` : '850+', label: 'Expert Hosts' },
+      { value: sessions.length ? `${sessions.length.toLocaleString()}+` : '1,200+', label: 'ACTIVE SESSIONS' },
+      { value: seats ? `${seats.toLocaleString()}+` : '50k+', label: 'SEATS BOOKED' },
+      { value: hosts ? `${hosts.toLocaleString()}+` : '850+', label: 'EXPERT HOSTS' },
     ];
   }, [sessions]);
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
 
   const toggleMute = () => {
     if (videoRef.current) {
@@ -63,172 +52,127 @@ function Hero({ sessions, query, onSearch }) {
 
   return (
     <>
-      <div className="relative mb-xl overflow-hidden rounded-3xl bg-slate-950 p-lg text-white shadow-2xl md:p-2xl">
-        {/* Background Ambient Video Stream */}
-        <div className="absolute inset-0 z-0 overflow-hidden opacity-35 transition-opacity duration-700">
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted={isMuted}
-            playsInline
-            className="h-full w-full object-cover filter brightness-90 saturate-125 scale-105"
-            poster="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80"
-          >
-            <source
-              src="https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-code-41549-large.mp4"
-              type="video/mp4"
-            />
-            <source
-              src="https://assets.mixkit.co/videos/preview/mixkit-hands-typing-on-a-computer-keyboard-41584-large.mp4"
-              type="video/mp4"
-            />
-          </video>
-        </div>
+      <section className="mx-auto mb-12 max-w-4xl pt-6 text-center">
+        {/* Main Title matching Screenshot 1 */}
+        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl lg:text-[3.25rem] leading-tight">
+          Small sessions, taught by people doing the work.
+        </h1>
 
-        {/* Ambient Dark Mesh & Vignette Overlay */}
-        <div className="absolute inset-0 z-[1] bg-gradient-to-r from-slate-950 via-slate-950/85 to-teal-950/60 backdrop-blur-[2px]" />
+        {/* Subtitle matching Screenshot 1 */}
+        <p className="mx-auto mt-4 max-w-2xl text-base text-slate-600 md:text-lg leading-relaxed">
+          Join intimate masterclasses and focused workshops led by industry practitioners.
+          Level up your skills with real-world knowledge.
+        </p>
 
-        {/* Main Hero Content Grid */}
-        <div className="relative z-10 grid grid-cols-1 items-center gap-xl lg:grid-cols-12">
-          {/* Left Column: Heading & Search */}
-          <div className="lg:col-span-7">
-            <div className="mb-md inline-flex items-center gap-xs rounded-full border border-teal-400/30 bg-teal-500/10 px-md py-1 text-label-sm font-semibold uppercase tracking-widest text-teal-300 backdrop-blur-md">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal-400 opacity-75"></span>
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-teal-400"></span>
-              </span>
-              Live Masterclasses & Workshops
-            </div>
-
-            <h1 className="text-display font-extrabold leading-[1.08] tracking-tight text-white md:text-[3.25rem]">
-              Small sessions, taught by people <span className="text-gradient">doing the work.</span>
-            </h1>
-
-            <p className="mt-md max-w-xl text-body-lg text-slate-300 leading-relaxed">
-              Join intimate masterclasses and focused workshops led by industry practitioners.
-              Level up your skills with real-world knowledge.
-            </p>
-
-            {/* Search Input Box */}
-            <form
-              onSubmit={(event) => event.preventDefault()}
-              className="mt-xl flex max-w-lg items-center gap-sm rounded-2xl border border-white/20 bg-slate-900/80 p-2 shadow-2xl backdrop-blur-xl transition-all focus-within:border-teal-400 focus-within:ring-2 focus-within:ring-teal-400/30"
+        {/* Search Bar matching Screenshot 1 */}
+        <form
+          onSubmit={(event) => event.preventDefault()}
+          className="mx-auto mt-8 flex max-w-xl items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm focus-within:border-emerald-700 focus-within:ring-2 focus-within:ring-emerald-700/20"
+        >
+          <div className="flex pl-3 text-slate-400">
+            <Icon name="search" size={20} />
+          </div>
+          <input
+            value={query}
+            onChange={(event) => onSearch(event.target.value)}
+            placeholder="What do you want to learn?"
+            aria-label="Search sessions"
+            className="w-full bg-transparent px-2 py-2 text-base text-slate-900 placeholder:text-slate-400 focus:outline-none"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => onSearch('')}
+              aria-label="Clear search"
+              className="shrink-0 rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
             >
-              <div className="flex pl-3 text-slate-400">
-                <Icon name="search" size={20} />
-              </div>
-              <input
-                value={query}
-                onChange={(event) => onSearch(event.target.value)}
-                placeholder="What do you want to learn? (e.g. Design, React, Copywriting)..."
-                aria-label="Search sessions"
-                className="w-full bg-transparent px-2 py-2 text-body-md text-white placeholder:text-slate-400 focus:outline-none"
+              <Icon name="x" size={16} />
+            </button>
+          )}
+          <Button
+            type="submit"
+            className="shrink-0 rounded-xl bg-[#164e3d] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0f382c]"
+          >
+            Find Sessions
+          </Button>
+        </form>
+
+        {/* Hero Video Preview Reel Container */}
+        <div className="group relative mx-auto mt-8 max-w-3xl overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 shadow-md">
+          <div className="relative aspect-[21/9] w-full overflow-hidden">
+            <video
+              ref={videoRef}
+              autoPlay
+              loop
+              muted={isMuted}
+              playsInline
+              className="h-full w-full object-cover filter brightness-90 saturate-110"
+              poster="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1000&q=80"
+            >
+              <source
+                src="https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-code-41549-large.mp4"
+                type="video/mp4"
               />
-              {query && (
-                <button
-                  type="button"
-                  onClick={() => onSearch('')}
-                  aria-label="Clear search"
-                  className="shrink-0 rounded-full p-1 text-slate-400 hover:bg-white/10 hover:text-white"
-                >
-                  <Icon name="x" size={16} />
-                </button>
-              )}
-              <Button type="submit" variant="primary" className="shrink-0 rounded-xl px-lg py-2.5">
-                Find Sessions
-              </Button>
-            </form>
-          </div>
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
 
-          {/* Right Column: Hero Video Feature Card */}
-          <div className="lg:col-span-5">
-            <div className="group relative overflow-hidden rounded-2xl border border-white/15 bg-slate-900/90 shadow-2xl backdrop-blur-xl transition-transform duration-500 hover:scale-[1.02]">
-              {/* Video Preview Header */}
-              <div className="relative aspect-video w-full overflow-hidden bg-slate-950">
-                <img
-                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80"
-                  alt="Featured Live Masterclass"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+            {/* Video Badges */}
+            <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-wider text-slate-900 shadow backdrop-blur-md">
+                <span className="h-2 w-2 rounded-full bg-red-600 animate-pulse" />
+                VIDEO INTRO
+              </span>
+              <button
+                onClick={toggleMute}
+                className="rounded-full bg-slate-900/80 p-2 text-white hover:bg-slate-800 backdrop-blur-md"
+                title={isMuted ? 'Unmute' : 'Mute'}
+              >
+                <Icon name={isMuted ? 'volume-x' : 'volume-2'} size={16} />
+              </button>
+            </div>
 
-                {/* Top Badges */}
-                <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-red-600/90 px-3 py-1 text-label-sm font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-md">
-                    <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
-                    LIVE DEMO
-                  </span>
-                  <span className="rounded-full bg-slate-900/80 px-3 py-1 text-label-sm font-medium text-slate-200 backdrop-blur-md">
-                    1,200+ Active Seats
-                  </span>
-                </div>
+            {/* Center Play Button Overlay */}
+            <button
+              onClick={() => setShowModal(true)}
+              className="absolute inset-0 m-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#164e3d] text-white shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-emerald-700"
+              aria-label="Play Masterclass Video"
+            >
+              <Icon name="play" size={26} className="ml-1 fill-current" />
+            </button>
 
-                {/* Play Button Overlay */}
-                <button
-                  onClick={() => setShowModal(true)}
-                  className="absolute inset-0 m-auto flex h-16 w-16 items-center justify-center rounded-full bg-teal-500/90 text-slate-950 shadow-2xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-teal-400 group-hover:shadow-teal-500/50"
-                  aria-label="Play Masterclass Preview"
-                >
-                  <Icon name="play" size={32} className="ml-1 fill-current" />
-                </button>
-
-                {/* Video Controls Bar */}
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-                  <p className="text-body-sm font-semibold text-white drop-shadow">
-                    System Architecture for Scale
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={toggleMute}
-                      className="rounded-full bg-slate-900/80 p-2 text-white hover:bg-slate-800"
-                      title={isMuted ? 'Unmute' : 'Mute'}
-                    >
-                      <Icon name={isMuted ? 'volume-x' : 'volume-2'} size={16} />
-                    </button>
-                  </div>
-                </div>
+            {/* Video Footer Label */}
+            <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-left">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400">Featured Video</p>
+                <p className="text-sm font-bold text-white">System Architecture & Live Coding Masterclass</p>
               </div>
-
-              {/* Card Footer Info */}
-              <div className="p-md bg-slate-900/95 flex items-center justify-between">
-                <div className="flex items-center gap-sm">
-                  <img
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
-                    alt="Marcus Chen"
-                    className="h-10 w-10 rounded-full border border-teal-400/50 object-cover"
-                  />
-                  <div>
-                    <p className="text-label-md font-bold text-white">Marcus Chen</p>
-                    <p className="text-body-sm text-slate-400">Principal Systems Architect</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowModal(true)}
-                  className="inline-flex items-center gap-1 text-label-sm font-semibold text-teal-400 hover:text-teal-300"
-                >
-                  Watch Intro <Icon name="arrow-right" size={14} />
-                </button>
-              </div>
+              <button
+                onClick={() => setShowModal(true)}
+                className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-300 hover:text-white"
+              >
+                Watch Preview <Icon name="arrow-right" size={14} />
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Stats Row */}
-        <dl className="relative z-10 mt-xl grid grid-cols-3 gap-md border-t border-white/10 pt-lg text-center md:text-left">
-          {stats.map((stat) => (
-            <div key={stat.label} className="flex flex-col">
-              <dt className="sr-only">{stat.label}</dt>
-              <dd className="text-headline-md font-extrabold text-white md:text-display">
-                {stat.value}
-              </dd>
-              <span className="text-body-sm font-medium uppercase tracking-wider text-teal-300/80">
-                {stat.label}
-              </span>
-            </div>
-          ))}
-        </dl>
-      </div>
+        {/* Stats Container matching Screenshot 1 */}
+        <div className="mt-10 rounded-2xl bg-slate-100/90 py-6 px-8 shadow-sm border border-slate-200/60">
+          <dl className="grid grid-cols-1 divide-y divide-slate-200 md:grid-cols-3 md:divide-y-0 md:divide-x">
+            {stats.map((stat) => (
+              <div key={stat.label} className="flex flex-col items-center py-2 md:py-0">
+                <dt className="sr-only">{stat.label}</dt>
+                <dd className="text-3xl font-extrabold text-slate-900 md:text-4xl">
+                  {stat.value}
+                </dd>
+                <span className="mt-1 text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                  {stat.label}
+                </span>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
 
       {/* Video Modal Overlay */}
       {showModal && (
@@ -236,8 +180,8 @@ function Hero({ sessions, query, onSearch }) {
           <div className="relative w-full max-w-4xl overflow-hidden rounded-2xl border border-white/20 bg-slate-900 shadow-2xl">
             <div className="flex items-center justify-between border-b border-white/10 px-lg py-md">
               <div className="flex items-center gap-sm">
-                <span className="h-3 w-3 rounded-full bg-teal-400 animate-ping" />
-                <h3 className="text-headline-sm font-bold text-white">BookSync Masterclass Preview</h3>
+                <span className="h-3 w-3 rounded-full bg-emerald-400 animate-ping" />
+                <h3 className="text-headline-sm font-bold text-white">BookSync Live Masterclass Preview</h3>
               </div>
               <button
                 onClick={() => setShowModal(false)}
@@ -257,10 +201,10 @@ function Hero({ sessions, query, onSearch }) {
             </div>
             <div className="flex items-center justify-between p-lg bg-slate-900">
               <div>
-                <h4 className="text-label-lg font-bold text-white">System Architecture & Microservices Workshop</h4>
-                <p className="text-body-sm text-slate-400">Led by Marcus Chen • Live interactive 2-hour session</p>
+                <h4 className="text-label-lg font-bold text-white">System Architecture for Scale</h4>
+                <p className="text-body-sm text-slate-400">Led by Marcus Chen • Live 2-hour session</p>
               </div>
-              <Button onClick={() => setShowModal(false)} variant="primary">
+              <Button onClick={() => setShowModal(false)} className="bg-[#164e3d] text-white">
                 Close Preview
               </Button>
             </div>
@@ -275,74 +219,67 @@ function SessionCard({ session }) {
   const status = availability(session);
   const soldOut = session.seats_remaining === 0;
 
+  // Determine category and formatted start date for card sub-header matching reference screenshot 2
+  const categoryName = session.category || 'WORKSHOP';
+
   return (
     <Card
       as={Link}
       to={`/sessions/${session.id}`}
-      className="group relative flex h-full flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md"
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-md"
     >
-      <Cover session={session} className="h-44 shrink-0">
-        <span className="absolute left-lg top-sm rounded-full bg-surface-container-lowest/95 px-sm py-1 text-label-md text-on-surface shadow-sm backdrop-blur-sm">
-          {formatPrice(session.price_cents)}
-        </span>
-        <div className="absolute right-sm top-sm flex gap-xs">
-          {session.my_booking && (
-            <Badge tone="primary" icon="check" className="bg-surface-container-lowest shadow-sm">
-              Booked
-            </Badge>
-          )}
-          <Badge
-            tone={status.tone}
-            dot
-            className="bg-surface-container-lowest/95 shadow-sm backdrop-blur-sm"
-          >
-            {status.label}
-          </Badge>
-        </div>
-      </Cover>
-
-      <div className="flex flex-grow flex-col p-lg">
-        {/* The host chip straddles the cover edge, so the card reads as one
-            composition rather than a stack of equal rectangles. */}
-        <div className="-mt-[38px] mb-md flex w-fit max-w-full items-center gap-sm rounded-full border border-surface-variant bg-surface-container-lowest/95 py-1 pl-1 pr-md shadow-sm backdrop-blur-sm">
-          <Avatar user={session.creator} size={28} />
-          <span className="truncate text-label-md text-on-surface-variant">
-            {session.creator.display_name || session.creator.username}
+      {/* Cover Image Container matching Screenshot 2 */}
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
+        <Cover session={session} className="h-full w-full">
+          {/* Top-Left LIVE Badge matching Screenshot 2 */}
+          <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-xs font-bold text-slate-900 shadow-sm backdrop-blur-sm">
+            <span className="h-2 w-2 rounded-full bg-emerald-600" />
+            LIVE
           </span>
-        </div>
 
-        <h3 className="mb-sm line-clamp-2 text-headline-sm text-on-surface transition-colors group-hover:text-primary">
+          {/* Top-Right Price Badge matching Screenshot 2 */}
+          <span className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-slate-900 shadow-sm backdrop-blur-sm">
+            {formatPrice(session.price_cents)}
+          </span>
+        </Cover>
+      </div>
+
+      {/* Card Content Body matching Screenshot 2 */}
+      <div className="flex flex-grow flex-col p-5">
+        {/* Category & Time line (e.g. DESIGN • Tomorrow, 10:00 AM) */}
+        <p className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">
+          {categoryName} · {formatDate(session.starts_at)}, {formatTime(session.starts_at)}
+        </p>
+
+        {/* Title matching Screenshot 2 */}
+        <h3 className="mb-2 line-clamp-2 text-lg font-bold text-slate-900 transition-colors group-hover:text-emerald-800">
           {session.title}
         </h3>
 
+        {/* Description matching Screenshot 2 */}
         {session.description && (
-          <p className="mb-md line-clamp-2 text-body-sm text-on-surface-variant">
+          <p className="mb-4 line-clamp-2 text-sm text-slate-600 leading-relaxed">
             {session.description}
           </p>
         )}
 
-        <div className="mt-auto space-y-sm border-t border-surface-variant/70 pt-md text-body-sm text-tertiary">
-          <div className="flex items-center gap-sm">
-            <Icon name="calendar" size={16} />
-            <span>
-              {formatDate(session.starts_at)} · {formatTime(session.starts_at)}
+        {/* Bottom Footer Row: Host Avatar + Name & Spots Left matching Screenshot 2 */}
+        <div className="mt-auto flex items-center justify-between border-t border-slate-100 pt-3 text-xs font-medium">
+          <div className="flex items-center gap-2">
+            <Avatar user={session.creator} size={24} />
+            <span className="font-semibold text-slate-800">
+              {session.creator.display_name || session.creator.username}
             </span>
           </div>
-          <div className="flex items-center justify-between gap-sm">
-            <span className="flex items-center gap-sm">
-              <Icon name="clock" size={16} />
-              {formatDuration(session.duration_minutes)}
-            </span>
-            <span
-              className={cx(
-                'flex items-center gap-xs text-label-md',
-                soldOut ? 'text-error' : 'text-primary',
-              )}
-            >
-              <Icon name="users" size={16} />
-              {session.seats_remaining} of {session.capacity} left
-            </span>
-          </div>
+
+          <span
+            className={cx(
+              'font-semibold',
+              soldOut ? 'text-red-600' : session.seats_remaining <= 3 ? 'text-slate-700' : 'text-slate-600',
+            )}
+          >
+            {soldOut ? 'Waitlist open' : `${session.seats_remaining} spots left`}
+          </span>
         </div>
       </div>
     </Card>
@@ -387,32 +324,38 @@ export default function Catalog() {
     <Layout>
       <Hero sessions={sessions} query={query} onSearch={search} />
 
-      <div className="mb-lg flex flex-wrap items-center justify-between gap-md">
-        <div className="flex flex-wrap items-center gap-sm">
-          {FILTERS.map((option) => (
-            <button
-              key={option.key}
-              onClick={() => setFilter(option.key)}
-              aria-pressed={filter === option.key}
-              className={cx(
-                'rounded-full border px-md py-2 text-label-md transition-all duration-200',
-                filter === option.key
-                  ? 'border-primary bg-primary text-on-primary shadow-sm'
-                  : 'border-surface-variant bg-surface-container-lowest text-on-surface-variant hover:border-outline-variant hover:text-on-surface',
-              )}
-            >
-              {option.label}
-            </button>
-          ))}
+      {/* Section Header matching Screenshot 2 */}
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-4 border-t border-slate-200/80 pt-10">
+        <div>
+          <h2 className="text-2xl font-extrabold text-slate-900">Featured Live Sessions</h2>
+          <p className="mt-1 text-sm text-slate-500">Curated workshops starting soon.</p>
         </div>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            {FILTERS.map((option) => (
+              <button
+                key={option.key}
+                onClick={() => setFilter(option.key)}
+                aria-pressed={filter === option.key}
+                className={cx(
+                  'rounded-full border px-3 py-1 text-xs font-semibold transition-all duration-200',
+                  filter === option.key
+                    ? 'border-[#164e3d] bg-[#164e3d] text-white shadow-sm'
+                    : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900',
+                )}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
 
-        <p className="text-body-sm text-on-surface-variant">
-          {loading
-            ? 'Loading…'
-            : `${visible.length} ${visible.length === 1 ? 'session' : 'sessions'}${
-                query ? ` matching “${query}”` : ''
-              }`}
-        </p>
+          <button
+            onClick={() => setFilter('all')}
+            className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
+          >
+            View all <Icon name="arrow-right" size={14} />
+          </button>
+        </div>
       </div>
 
       {error && (
