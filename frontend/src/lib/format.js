@@ -26,7 +26,7 @@ export function formatDuration(minutes) {
 
 export function formatPrice(cents) {
   if (!cents) return 'Free';
-  return `$${(cents / 100).toFixed(2)}`;
+  return `₹${(cents / 100).toFixed(2)}`;
 }
 
 /** Availability badge state, shared by the catalog and the detail sidebar. */

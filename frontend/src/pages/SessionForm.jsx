@@ -163,7 +163,7 @@ export default function SessionForm() {
                     type="number"
                     min="0"
                     step="0.01"
-                    prefix="$"
+                    prefix="₹"
                     required
                     value={form.price_dollars}
                     onChange={update('price_dollars')}
