@@ -51,15 +51,16 @@ function Hero({ sessions, query, onSearch }) {
 
   return (
     <>
-      <div className="relative mb-12 overflow-hidden rounded-3xl bg-slate-950 px-6 py-12 md:py-16 text-center text-white shadow-2xl">
-        {/* Full-Width Background Video Loop */}
+      {/* 100% Edge-to-Edge Full Screen Width Hero Banner */}
+      <div className="relative w-full min-h-[580px] overflow-hidden bg-slate-950 px-6 py-16 text-center text-white shadow-2xl md:py-24 animate-fade-in-up">
+        {/* Full-Width Background Video Stream */}
         <video
           ref={videoRef}
           autoPlay
           loop
           muted={isMuted}
           playsInline
-          className="absolute inset-0 h-full w-full object-cover opacity-45 filter brightness-90 saturate-125 transition-all duration-700"
+          className="absolute inset-0 h-full w-full object-cover opacity-50 filter brightness-90 saturate-125 transition-all duration-1000 scale-105"
           poster="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80"
         >
           <source
@@ -72,37 +73,41 @@ function Hero({ sessions, query, onSearch }) {
           />
         </video>
 
-        {/* Ambient Overlay Gradient Vignette */}
+        {/* Dynamic Overlay Gradient & Radial Glow */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/85 to-slate-950/95 backdrop-blur-[2px]" />
+        <div className="pointer-events-none absolute top-1/2 left-1/2 h-[450px] w-[650px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-500/10 blur-[130px]" />
 
         <div className="relative z-10 mx-auto max-w-4xl">
-          {/* Live Masterclasses Badge */}
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-emerald-300 backdrop-blur-md">
-            <span className="relative flex h-2 w-2">
+          {/* Animated Badge */}
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/15 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-emerald-300 backdrop-blur-md shadow-lg animate-float">
+            <span className="relative flex h-2.5 w-2.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
             </span>
             Live Masterclasses & Workshops
           </div>
 
-          {/* Main Title */}
-          <h1 className="text-4xl font-extrabold tracking-tight text-white md:text-5xl lg:text-[3.5rem] leading-tight">
-            Small sessions, taught by people <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-teal-200 to-white">doing the work.</span>
+          {/* Headline */}
+          <h1 className="text-4xl font-extrabold tracking-tight text-white md:text-6xl lg:text-[3.75rem] leading-[1.12]">
+            Small sessions, taught by people{' '}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-teal-200 to-white drop-shadow-sm">
+              doing the work.
+            </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="mx-auto mt-4 max-w-2xl text-base text-slate-300 md:text-lg leading-relaxed">
+          <p className="mx-auto mt-5 max-w-2xl text-base text-slate-300 md:text-xl leading-relaxed font-normal">
             Join intimate masterclasses and focused workshops led by industry practitioners.
             Level up your skills with real-world knowledge.
           </p>
 
-          {/* Search Input Bar */}
+          {/* Glassmorphism Search Bar */}
           <form
             onSubmit={(event) => event.preventDefault()}
-            className="mx-auto mt-8 flex max-w-xl items-center gap-2 rounded-2xl border border-white/20 bg-slate-900/80 p-2 shadow-2xl backdrop-blur-xl transition-all focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-400/30"
+            className="mx-auto mt-10 flex max-w-xl items-center gap-2 rounded-2xl border border-white/25 bg-slate-900/80 p-2.5 shadow-2xl backdrop-blur-xl transition-all duration-300 focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-400/30 hover:border-white/40"
           >
             <div className="flex pl-3 text-slate-400">
-              <Icon name="search" size={20} />
+              <Icon name="search" size={22} />
             </div>
             <input
               value={query}
@@ -118,47 +123,47 @@ function Hero({ sessions, query, onSearch }) {
                 aria-label="Clear search"
                 className="shrink-0 rounded-full p-1 text-slate-400 hover:bg-white/10 hover:text-white"
               >
-                <Icon name="x" size={16} />
+                <Icon name="x" size={18} />
               </button>
             )}
             <Button
               type="submit"
-              className="shrink-0 rounded-xl bg-[#164e3d] px-6 py-3 text-sm font-semibold text-white shadow-lg hover:bg-emerald-700"
+              className="shrink-0 rounded-xl bg-[#164e3d] px-7 py-3.5 text-sm font-semibold text-white shadow-xl transition-all hover:bg-emerald-700 hover:scale-105 active:scale-95"
             >
               Find Sessions
             </Button>
           </form>
 
-          {/* Watch Masterclass Intro Video Action Pill */}
-          <div className="mt-6 flex items-center justify-center gap-3">
+          {/* Interactive Play Preview Button */}
+          <div className="mt-8 flex items-center justify-center gap-3">
             <button
               onClick={() => setShowModal(true)}
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-xs font-semibold text-white shadow-lg backdrop-blur-md transition-all hover:bg-white/20 hover:scale-105"
+              className="group inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-xs font-semibold text-white shadow-xl backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105 active:scale-95"
             >
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-slate-950">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-slate-950 shadow-md transition-transform group-hover:scale-110">
                 <Icon name="play" size={14} className="ml-0.5 fill-current" />
               </span>
               Watch Masterclass Preview Video
             </button>
             <button
               onClick={toggleMute}
-              className="rounded-full border border-white/20 bg-white/10 p-2.5 text-white hover:bg-white/20 backdrop-blur-md"
+              className="rounded-full border border-white/20 bg-white/10 p-3 text-white hover:bg-white/20 backdrop-blur-md transition-transform hover:scale-105"
               title={isMuted ? 'Unmute video audio' : 'Mute video audio'}
             >
-              <Icon name={isMuted ? 'volume-x' : 'volume-2'} size={16} />
+              <Icon name={isMuted ? 'volume-x' : 'volume-2'} size={18} />
             </button>
           </div>
 
-          {/* Glassmorphic Stats Row */}
-          <div className="mt-12 rounded-2xl border border-white/10 bg-slate-900/60 p-6 shadow-xl backdrop-blur-md">
+          {/* Glassmorphic Stats Container */}
+          <div className="mt-14 rounded-2xl border border-white/15 bg-slate-900/65 p-6 shadow-2xl backdrop-blur-md">
             <dl className="grid grid-cols-1 divide-y divide-white/10 md:grid-cols-3 md:divide-y-0 md:divide-x">
               {stats.map((stat) => (
-                <div key={stat.label} className="flex flex-col items-center py-2 md:py-0">
+                <div key={stat.label} className="flex flex-col items-center py-3 md:py-0">
                   <dt className="sr-only">{stat.label}</dt>
-                  <dd className="text-3xl font-extrabold text-white md:text-4xl">
+                  <dd className="text-3xl font-extrabold text-white md:text-4xl tracking-tight">
                     {stat.value}
                   </dd>
-                  <span className="mt-1 text-xs font-semibold tracking-wider text-emerald-300 uppercase">
+                  <span className="mt-1 text-xs font-bold tracking-wider text-emerald-300 uppercase">
                     {stat.label}
                   </span>
                 </div>
@@ -315,88 +320,90 @@ export default function Catalog() {
   };
 
   return (
-    <Layout>
+    <Layout fullBleed>
       <Hero sessions={sessions} query={query} onSearch={search} />
 
-      {/* Section Header matching Screenshot 2 */}
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-4 border-t border-slate-200/80 pt-10">
-        <div>
-          <h2 className="text-2xl font-extrabold text-slate-900">Featured Live Sessions</h2>
-          <p className="mt-1 text-sm text-slate-500">Curated workshops starting soon.</p>
+      <div className="mx-auto max-w-content px-margin_mobile md:px-margin_desktop">
+        {/* Section Header matching Screenshot 2 */}
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-4 pt-4">
+          <div>
+            <h2 className="text-2xl font-extrabold text-slate-900">Featured Live Sessions</h2>
+            <p className="mt-1 text-sm text-slate-500">Curated workshops starting soon.</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              {FILTERS.map((option) => (
+                <button
+                  key={option.key}
+                  onClick={() => setFilter(option.key)}
+                  aria-pressed={filter === option.key}
+                  className={cx(
+                    'rounded-full border px-3 py-1 text-xs font-semibold transition-all duration-200',
+                    filter === option.key
+                      ? 'border-[#164e3d] bg-[#164e3d] text-white shadow-sm'
+                      : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900',
+                  )}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setFilter('all')}
+              className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
+            >
+              View all <Icon name="arrow-right" size={14} />
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            {FILTERS.map((option) => (
-              <button
-                key={option.key}
-                onClick={() => setFilter(option.key)}
-                aria-pressed={filter === option.key}
-                className={cx(
-                  'rounded-full border px-3 py-1 text-xs font-semibold transition-all duration-200',
-                  filter === option.key
-                    ? 'border-[#164e3d] bg-[#164e3d] text-white shadow-sm'
-                    : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900',
-                )}
-              >
-                {option.label}
-              </button>
+
+        {error && (
+          <div className="mb-lg">
+            <Banner kind="error" title="Could not load the catalog">
+              {error}
+            </Banner>
+          </div>
+        )}
+
+        {loading ? (
+          <div className="grid grid-cols-1 gap-gutter md:grid-cols-2 lg:grid-cols-3">
+            {[0, 1, 2, 3, 4, 5].map((key) => (
+              <SkeletonCard key={key} />
             ))}
           </div>
-
-          <button
-            onClick={() => setFilter('all')}
-            className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
+        ) : visible.length === 0 ? (
+          <EmptyState
+            icon={query || filter !== 'all' ? 'search' : 'calendar'}
+            title={query || filter !== 'all' ? 'No sessions match' : 'The catalog is empty'}
+            action={
+              query || filter !== 'all' ? (
+                <Button variant="outline" onClick={clearFilters} icon="x">
+                  Clear filters
+                </Button>
+              ) : user?.role === 'creator' ? (
+                <Button as={Link} to="/creator/sessions/new" icon="plus">
+                  Publish the first session
+                </Button>
+              ) : (
+                <Button as={Link} to="/signup" icon="user">
+                  Create an account to host one
+                </Button>
+              )
+            }
           >
-            View all <Icon name="arrow-right" size={14} />
-          </button>
-        </div>
+            {query || filter !== 'all'
+              ? 'Nothing upcoming fits those filters. Try widening the search.'
+              : 'No upcoming sessions yet — the first one could be yours.'}
+          </EmptyState>
+        ) : (
+          <div className="grid grid-cols-1 gap-gutter md:grid-cols-2 lg:grid-cols-3">
+            {visible.map((session) => (
+              <SessionCard key={session.id} session={session} />
+            ))}
+          </div>
+        )}
       </div>
-
-      {error && (
-        <div className="mb-lg">
-          <Banner kind="error" title="Could not load the catalog">
-            {error}
-          </Banner>
-        </div>
-      )}
-
-      {loading ? (
-        <div className="grid grid-cols-1 gap-gutter md:grid-cols-2 lg:grid-cols-3">
-          {[0, 1, 2, 3, 4, 5].map((key) => (
-            <SkeletonCard key={key} />
-          ))}
-        </div>
-      ) : visible.length === 0 ? (
-        <EmptyState
-          icon={query || filter !== 'all' ? 'search' : 'calendar'}
-          title={query || filter !== 'all' ? 'No sessions match' : 'The catalog is empty'}
-          action={
-            query || filter !== 'all' ? (
-              <Button variant="outline" onClick={clearFilters} icon="x">
-                Clear filters
-              </Button>
-            ) : user?.role === 'creator' ? (
-              <Button as={Link} to="/creator/sessions/new" icon="plus">
-                Publish the first session
-              </Button>
-            ) : (
-              <Button as={Link} to="/signup" icon="user">
-                Create an account to host one
-              </Button>
-            )
-          }
-        >
-          {query || filter !== 'all'
-            ? 'Nothing upcoming fits those filters. Try widening the search.'
-            : 'No upcoming sessions yet — the first one could be yours.'}
-        </EmptyState>
-      ) : (
-        <div className="grid grid-cols-1 gap-gutter md:grid-cols-2 lg:grid-cols-3">
-          {visible.map((session) => (
-            <SessionCard key={session.id} session={session} />
-          ))}
-        </div>
-      )}
     </Layout>
   );
 }

@@ -246,7 +246,7 @@ function Footer() {
 }
 
 /** Standard app shell: fixed nav, centred content column, footer. */
-export default function Layout({ children, wide = false }) {
+export default function Layout({ children, wide = false, fullBleed = false }) {
   return (
     <div className="relative flex min-h-screen flex-col overflow-x-hidden">
       {/* Dynamic ambient background glow orbs */}
@@ -257,9 +257,8 @@ export default function Layout({ children, wide = false }) {
       <TopNav />
       <main
         className={cx(
-          'w-full flex-grow px-margin_mobile pb-2xl pt-[104px] md:px-margin_desktop',
-          wide ? 'max-w-content' : 'max-w-content',
-          'mx-auto relative z-10',
+          'w-full flex-grow pt-[72px] pb-2xl relative z-10',
+          !fullBleed && 'px-margin_mobile md:px-margin_desktop max-w-content mx-auto',
         )}
       >
         {children}
