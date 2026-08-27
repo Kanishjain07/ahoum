@@ -76,48 +76,48 @@ export function AuthShell({ eyebrow, headline, points, children, footer }) {
           BookSync
         </Link>
 
+        {/* Demo Video Showcase - Positioned directly under BookSync */}
+        <div className="relative z-10 my-4 overflow-hidden rounded-2xl border border-white/20 bg-slate-950/70 shadow-2xl backdrop-blur-md transition-all duration-300 hover:border-emerald-400/50">
+          <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-950">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-full w-full object-cover opacity-85 transition-transform duration-700 hover:scale-105"
+              poster="https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80"
+            >
+              <source
+                src="https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-code-41549-large.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
+            <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-slate-900/85 px-2.5 py-1 text-[11px] font-bold text-emerald-300 backdrop-blur-md border border-white/10 shadow-lg">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+              DEMO • PLATFORM WORKFLOW
+            </span>
+            <div className="absolute bottom-3 left-3 right-3">
+              <p className="text-xs font-bold text-white">How Creators List & Users Experience Live Sessions</p>
+              <p className="text-[11px] text-slate-300 leading-tight">Instant seat booking, live video masterclasses & roster management.</p>
+            </div>
+          </div>
+        </div>
+
         {/* Hero Content */}
-        <div className="relative z-10 my-auto max-w-md py-6">
-          <span className="mb-3 inline-block rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-emerald-300 backdrop-blur-md">
+        <div className="relative z-10 max-w-md py-2">
+          <span className="mb-2 inline-block rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-emerald-300 backdrop-blur-md">
             {eyebrow}
           </span>
           <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-white md:text-4xl">
             {headline}
           </h1>
 
-          {/* User & Creator Experience Demo Video */}
-          <div className="mt-6 overflow-hidden rounded-2xl border border-white/20 bg-slate-950/70 shadow-2xl backdrop-blur-md transition-all duration-300 hover:border-emerald-400/50">
-            <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-950">
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="h-full w-full object-cover opacity-85 transition-transform duration-700 hover:scale-105"
-                poster="https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80"
-              >
-                <source
-                  src="https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-code-41549-large.mp4"
-                  type="video/mp4"
-                />
-              </video>
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
-              <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-slate-900/85 px-2.5 py-1 text-[11px] font-bold text-emerald-300 backdrop-blur-md border border-white/10 shadow-lg">
-                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-                DEMO • PLATFORM WORKFLOW
-              </span>
-              <div className="absolute bottom-3 left-3 right-3">
-                <p className="text-xs font-bold text-white">How Creators List & Users Experience Live Sessions</p>
-                <p className="text-[11px] text-slate-300 leading-tight">Instant seat booking, live video masterclasses & roster management.</p>
-              </div>
-            </div>
-          </div>
-
-          <ul className="mt-6 space-y-4">
+          <ul className="mt-5 space-y-3.5">
             {points.map((point) => (
               <li key={point.title} className="flex gap-3 items-start">
-                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10 text-emerald-300 ring-1 ring-inset ring-white/15 backdrop-blur-md">
-                  <Icon name={point.icon} size={16} />
+                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/10 text-emerald-300 ring-1 ring-inset ring-white/15 backdrop-blur-md">
+                  <Icon name={point.icon} size={15} />
                 </span>
                 <div>
                   <span className="block text-sm font-bold text-white">{point.title}</span>
