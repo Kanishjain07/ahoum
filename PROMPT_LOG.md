@@ -264,3 +264,23 @@ made. The pattern across all four corrections above is the same: the model is
 reliable at producing the *shape* of a correct answer and unreliable at the
 facts inside it, so every load-bearing claim in this repo has a command next to
 it that I actually ran.
+
+---
+
+## 8. Password Auth, Permanent Role Locking, Human Typography & Floating Navbar
+
+**User prompts.**
+- *"add id password in this"* & *"this thing i need The auth card now cleanly focuses on Google/GitHub Single Sign-on and Username/Email + Password Authentication."*
+- *"see i need one as a user and as a client i dont wanr rgar user switch to ceator"*
+- *"because of gradient and all it look like ai genreted and also chNGE TEXT"*
+- *"change nav bar to more asthetic"* & *"why this gap you created change navbar thing arrange like that so when i seee it look good"*
+
+**Key changes.**
+- **Backend & Frontend Password Auth**: Added `RegisterView` (`POST /api/auth/register/`) and `PasswordLoginView` (`POST /api/auth/login/`) in `accounts/views.py` and `PasswordRegister` / `PasswordLogin` in `auth.jsx`.
+- **Permanent Role Locking**: Updated `ProfileUpdateSerializer` in `serializers.py` so account roles (`User / Learner` vs `Host / Creator`) are set during registration/onboarding and permanently locked (`role_chosen = True`). Removed role switcher from `Profile.jsx`.
+- **Human Typography & Solid Aesthetic**: Replaced gradient text titles and ambient blur orbs with solid, human-crafted typography (`text-emerald-400`). Updated copy across hero banner and search fields.
+- **Floating Glass Top Navigation Bar**: Redesigned `TopNav` into a floating translucent bar with pill tabs, subtle search input, and profile account menu. Removed double top margin padding (`pt-[72px]`) to align page content directly below the navbar.
+
+**Verification.**
+- Rebuilt backend and frontend Docker containers (`docker compose up -d --build`).
+- Verified zero errors on `npm run build` and clean container execution.

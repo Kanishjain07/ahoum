@@ -40,23 +40,6 @@ export default function Profile() {
     }
   }
 
-  async function switchRole() {
-    const next = user.role === 'creator' ? 'user' : 'creator';
-    setSwitching(true);
-    setError(null);
-    try {
-      setUser(await api.patch('/auth/me/', { role: next }));
-      toast.success(
-        next === 'creator' ? 'You are now a creator' : 'Switched back to a user account',
-        next === 'creator' ? 'The creator dashboard is now in your navigation.' : undefined,
-      );
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setSwitching(false);
-    }
-  }
-
   const isCreator = user.role === 'creator';
   const isGoogle = user.oauth_provider === 'google';
   const providerLabel = isGoogle ? 'Google' : 'GitHub';
@@ -65,26 +48,13 @@ export default function Profile() {
     <Layout>
       <PageHeader
         title="Account settings"
-        subtitle="Manage your profile information and role."
+        subtitle="Manage your profile information."
         actions={
-          <Card className="flex w-fit items-center gap-sm p-xs">
-            <span className="px-sm py-1 text-label-sm text-on-surface-variant">Current role:</span>
-            <Badge tone="secondary" icon={isCreator ? 'dashboard' : 'user'}>
-              {isCreator ? 'Creator' : 'User'}
+          <Card className="flex w-fit items-center gap-2 px-3 py-1.5 border border-slate-200">
+            <span className="text-xs font-semibold text-slate-500">Account Role:</span>
+            <Badge tone="secondary" icon={isCreator ? 'dashboard' : 'user'} className="font-bold">
+              {isCreator ? 'Host / Creator' : 'User / Learner'}
             </Badge>
-            <Button
-              size="sm"
-              onClick={switchRole}
-              loading={switching}
-              icon="arrow-right"
-              title={
-                isCreator
-                  ? 'Only possible while you own no sessions.'
-                  : 'Creators can publish sessions.'
-              }
-            >
-              {isCreator ? 'Switch to user' : 'Switch to creator'}
-            </Button>
           </Card>
         }
       />

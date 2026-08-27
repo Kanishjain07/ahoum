@@ -29,24 +29,25 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
-    """Profile edit. `role` is write-able but only upgrades user -> creator."""
+    """Profile edit. Role is locked once chosen on registration/welcome."""
 
     class Meta:
         model = User
         fields = ("display_name", "bio", "role")
 
+    def validate_role(self, value):
+        if value != self.instance.role:
+            if self.instance.role_chosen:
+                raise serializers.ValidationError(
+                    "Account role is permanently set upon account creation."
+                )
+            if self.instance.sessions.exists() and value == Role.USER:
+                raise serializers.ValidationError(
+                    "Cannot drop creator role while you still own sessions."
+                )
+        return value
+
     def update(self, instance, validated_data):
         if "role" in validated_data:
             instance.role_chosen = True
         return super().update(instance, validated_data)
-
-    def validate_role(self, value):
-        if value == self.instance.role:
-            return value
-        if value == Role.CREATOR:
-            return value
-        if self.instance.sessions.exists():
-            raise serializers.ValidationError(
-                "Cannot drop creator role while you still own sessions."
-            )
-        return value

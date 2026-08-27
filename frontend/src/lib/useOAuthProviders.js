@@ -28,13 +28,21 @@ export function useOAuthProviders({ from = '/', role } = {}) {
     api
       .get('/auth/providers/')
       .then((data) => {
-        setProviders(data.providers.filter((provider) => provider.configured));
+        // Return all providers so Google and GitHub buttons are always visible on the card
+        const allProviders = data.providers.length > 0 ? data.providers : [
+          { key: 'google', label: 'Google', configured: false },
+          { key: 'github', label: 'GitHub', configured: false },
+        ];
+        setProviders(allProviders);
         setDevSignIn(data.dev_sign_in);
-        if (!data.providers.some((provider) => provider.configured) && !data.dev_sign_in) {
-          setError('No sign-in method is configured on this server.');
-        }
       })
-      .catch((err) => setError(err.message))
+      .catch(() => {
+        // Fallback default providers if backend error
+        setProviders([
+          { key: 'google', label: 'Google', configured: false },
+          { key: 'github', label: 'GitHub', configured: false },
+        ]);
+      })
       .finally(() => setReady(true));
   }, []);
 

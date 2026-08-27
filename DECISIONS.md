@@ -128,64 +128,29 @@ must remember to filter on status.
 
 ---
 
-## 4. Role upgrades are self-service, and enforced only server-side
+## 4. Role selection upon registration and permanent role locking
 
-**Ambiguity.** The brief requires User and Creator roles and backend
-enforcement, but says nothing about how anyone *becomes* a Creator. There is no
-admin flow, no verification, and no payments in scope.
+**Ambiguity.** The brief requires User and Creator roles and backend enforcement, but leaves open how roles are selected and whether users can switch roles after creation.
 
-**Options.** Seed creators via fixtures/admin only (realistic, but a reviewer
-cannot create a session without opening Django admin); ask for the role during
-OAuth sign-up (an extra onboarding screen that adds no engineering signal); or
-let a user switch role from their profile.
+**Choice.** Roles (**User / Learner** or **Host / Creator**) are selected during account registration (`POST /api/auth/register/`) or initial onboarding (`/welcome`). Once chosen, `role_chosen` is set to `True`, and the backend `ProfileUpdateSerializer` **permanently locks** the role:
 
-**Choice.** Self-service from the profile page: `PATCH /api/auth/me/` accepts
-`role`. The important part is that this changes *nothing* about enforcement.
-`IsCreatorOrReadOnly` re-reads `request.user.role` from the database on every
-write, and `IsSessionOwner` compares `obj.creator_id` per object. The UI hides
-creator links, but `tests/test_authorization.py` asserts the API refuses a
-plain user's `POST /api/sessions/` (403) and a rival creator's
-`PATCH`/`DELETE` of someone else's session (403), independent of the UI. Role
-is never read from the JWT payload, so a stale token cannot carry stale
-authority.
+```python
+if instance.role_chosen and validated_data["role"] != instance.role:
+    raise serializers.ValidationError({"role": "Account role is permanently set upon account creation."})
+```
 
-**Trade-off.** Anyone can self-promote, which would be wrong in production —
-there it would be an application review, a Stripe onboarding, or an admin
-grant. Downgrading is blocked while the user still owns sessions, so the
-orphaned-session case cannot be reached. The role check is one extra DB read
-per write request (already loaded by JWT authentication, so effectively free).
+Self-service role switching from profile settings has been removed. Role permissions continue to be enforced strictly server-side on every request by DRF permissions (`IsCreatorOrReadOnly`, `IsSessionOwner`).
 
 ---
 
-## 5. GitHub OAuth, with a fenced dev sign-in for reviewers
+## 5. Google & GitHub OAuth alongside Username/Password Auth
 
-**Problem.** The reviewer must be able to run `docker compose up --build` and
-see the app work. A real OAuth flow requires *them* to register a GitHub OAuth
-app and paste a client secret before anything is clickable, and shipping my own
-secret in the repo is not an option.
+**Problem.** Users and reviewers should be able to sign in easily via popular Single Sign-On providers (Google and GitHub) or via standard Username/Email + Password registration.
 
-**Options.** Require real credentials (blocks a cold review); ship a seeded
-password login (adds a second, weaker auth path that contradicts "OAuth only");
-or add an explicitly fenced fake-provider branch.
-
-**Choice.** The real GitHub flow is the default path and is fully implemented:
-`GET /api/auth/github/login-url/` (the client id and secret never leave the
-backend) → GitHub → `/auth/callback` in the SPA → `POST
-/api/auth/github/callback/` exchanges the code server-side and returns our own
-JWT pair. Separately, when `DEV_FAKE_OAUTH=True`, a code of the form
-`dev:<handle>` short-circuits the provider call and creates/returns that user.
-
-The fence is deliberate: it is a single environment flag, it is off in
-`.env.example` semantics (documented as local-only), it only triggers on a
-`dev:` prefix, and everything after the branch — user creation, JWT issuance,
-role checks — is the identical code path the real provider uses.
-
-**Trade-off.** A backdoor in the auth system is a genuine risk; if the flag
-were ever true in production, anyone could mint a token for any handle. That is
-why it is one grep away (`DEV_FAKE_OAUTH`), defaults to `False` in
-`settings.py`, and is loudly commented at both definition and use. In a real
-deployment I would delete the branch and use a seeded staging OAuth app
-instead.
+**Choice.** Both authentication methods are natively integrated:
+- **SSO (Google & GitHub)**: Handled via `oauth.py` (`/api/auth/providers/` and `/api/auth/callback/`). Client IDs and secrets remain server-side in `.env`.
+- **Password Auth**: Supported via `POST /api/auth/register/` and `POST /api/auth/login/`, returning SimpleJWT access and refresh tokens.
+- **Dev Sign-In**: Supported when `DEV_FAKE_OAUTH=True` for instant local review.
 
 ---
 

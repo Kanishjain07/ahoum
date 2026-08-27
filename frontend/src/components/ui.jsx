@@ -303,29 +303,50 @@ function monogram(text = '') {
 }
 
 const FALLBACK_IMAGES = [
-  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1542744094-3a317272018a?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1542744094-3a317272018a?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80',
 ];
 
 export function Cover({ session, className, children }) {
   const [failed, setFailed] = useState(false);
+  const palette = paletteFor(session?.id || 0);
 
-  // Pick cover URL if available, else pick deterministic high quality fallback photo
   const fallbackSrc = FALLBACK_IMAGES[Math.abs(Number(session?.id) || 0) % FALLBACK_IMAGES.length];
-  const imgSrc = session?.cover_url && !failed ? session.cover_url : fallbackSrc;
+  const rawUrl = session?.cover_url ? session.cover_url : fallbackSrc;
 
   return (
     <div className={cx('relative overflow-hidden bg-slate-900', className)}>
-      <img
-        src={imgSrc}
-        alt={session?.title || 'Session cover'}
-        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-        onError={() => setFailed(true)}
-      />
+      {!failed ? (
+        <img
+          src={rawUrl}
+          alt={session?.title || 'Session cover'}
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <div
+          className="flex h-full w-full flex-col justify-between p-6 transition-transform duration-700 group-hover:scale-105"
+          style={{ backgroundImage: `${TEXTURE}, ${palette.lights}, ${palette.base}` }}
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-xs font-black text-white backdrop-blur-md">
+              {monogram(session?.title)}
+            </span>
+            <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-[11px] font-bold text-emerald-300 backdrop-blur-md">
+              Live Session
+            </span>
+          </div>
+          <div>
+            <h3 className="text-xl font-extrabold text-white drop-shadow-md leading-tight">
+              {session?.title}
+            </h3>
+          </div>
+        </div>
+      )}
       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent pointer-events-none" />
       {children}
     </div>

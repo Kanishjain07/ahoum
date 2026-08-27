@@ -36,30 +36,22 @@ python scripts/seed_demo.py         # stdlib only, safe to re-run
 
 ### Signing in
 
-`.env.example` ships with `DEV_FAKE_OAUTH=True` so the app is usable
-immediately: the sign-in page has a **dev sign-in** field — type any handle and
-you are signed in as that user, through the same code path (user creation, JWT
-issuance, role checks) the real provider uses. After seeding, sign in as
-`elena-rostova` or `marcus-chen` for the creator experience, or
-`aiko-tanaka` for a user with bookings.
+BookSync cleanly supports both **Single Sign-On (Google & GitHub OAuth)** and **Username/Email + Password Authentication**.
 
-To use the real GitHub flow instead:
+- **Password Registration & Login**: Users can register with a username, optional email, password, and chosen role directly on the sign-up page (`POST /api/auth/register/`) or sign in via `POST /api/auth/login/`.
+- **Google & GitHub OAuth**: The auth card features dedicated Google and GitHub SSO buttons.
+  - To use real OAuth flows, set `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` and `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` in `.env`, and run `docker compose up -d --build backend`.
+  - Redirect URIs for local OAuth:
+    - Google: `http://localhost:8080/auth/callback/google`
+    - GitHub: `http://localhost:8080/auth/callback/github`
+- **Dev Sign-In**: `.env.example` ships with `DEV_FAKE_OAUTH=True` for instant local review without OAuth credentials.
 
-1. Create an OAuth app at <https://github.com/settings/developers> with
-   **Authorization callback URL** `http://localhost:8080/auth/callback`.
-2. Put `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` in `.env`, set
-   `DEV_FAKE_OAUTH=False`, and `docker compose up -d --build backend`.
+### Account Roles
 
-With no client id configured, `GET /api/auth/github/login-url/` returns
-`503 oauth_unconfigured` and the login page says so rather than bouncing you to
-a broken GitHub page.
-
-### Becoming a creator
-
-New accounts are `user`. Open **Account settings** and switch the role to
-Creator to get the dashboard. This is self-service by design in this build (see
-DECISIONS.md #4) and it changes nothing about enforcement: the API re-checks the
-role from the database on every write.
+Roles are chosen upon account creation (**User / Learner** or **Host / Creator**):
+- **User / Learner**: Can browse the catalog, view session details, and book seats.
+- **Host / Creator**: Gets access to session management and the Creator Dashboard (`/creator`).
+- **Role Locking**: Once chosen upon registration/welcome (`role_chosen = True`), account roles are **permanently locked** and cannot be changed from profile settings. The backend API enforces role permissions on every request.
 
 ---
 
@@ -125,34 +117,26 @@ from the host at all.
   error to `{"detail", "code"}` so the SPA has one renderer and can branch on
   machine-readable codes (`session_full`, `already_booked`, `token_not_valid`).
 - `accounts/` — custom `User` (role, display name, bio, OAuth identity),
-  GitHub code exchange in `oauth.py`, JWT issuance, `GET/PATCH /api/auth/me/`.
+  Google & GitHub code exchange in `oauth.py`, password login & registration views, JWT issuance, `GET/PATCH /api/auth/me/`.
 - `catalog/` — `Session` and `Booking` models with the capacity and uniqueness
   constraints, `services.py` (the only place bookings are mutated),
   `permissions.py` (`IsCreatorOrReadOnly`, `IsSessionOwner`), viewsets.
 
-**Auth flow.** SPA → `GET /api/auth/github/login-url/` (client id and secret
-never leave the backend) → GitHub → `/auth/callback` in the SPA →
-`POST /api/auth/github/callback/` exchanges the code server-side and returns
-our own access + refresh JWTs. The SPA stores them, sends
-`Authorization: Bearer …`, and refreshes on `token_not_valid` with a
-single-flight guard (refresh rotation is on, so parallel refreshes would log
-the user out).
+**Auth flow.** SPA → Google/GitHub SSO or Username/Password → `POST /api/auth/register/` or `POST /api/auth/login/` or `POST /api/auth/callback/` exchanges credentials server-side and returns our own access + refresh JWTs. The SPA stores them, sends `Authorization: Bearer …`, and refreshes on `token_not_valid` with a single-flight guard.
 
-**Authorization is entirely server-side.** The UI hides creator links, but
-`IsCreatorOrReadOnly` re-reads the role from the database per write and
-`IsSessionOwner` compares `creator_id` per object. Role is never read from the
-JWT payload, so a token issued before a role change carries no stale authority.
-`tests/test_authorization.py` asserts each of these against the API directly.
+**Authorization is entirely server-side.** The UI hides creator links, but `IsCreatorOrReadOnly` re-reads the role from the database per write and `IsSessionOwner` compares `creator_id` per object. Role is never read from the JWT payload, so a token issued before a role change carries no stale authority.
 
 ### API
 
 | Method | Path | Auth |
 |---|---|---|
 | GET | `/api/healthz/` | public |
-| GET | `/api/auth/github/login-url/` | public |
-| POST | `/api/auth/github/callback/` | public — returns `{access, refresh, user}` |
+| POST | `/api/auth/register/` | public — Username/Email + Password registration |
+| POST | `/api/auth/login/` | public — Username/Email + Password login |
+| GET | `/api/auth/providers/` | public — returns configured OAuth providers |
+| POST | `/api/auth/callback/` | public — exchanges OAuth code for `{access, refresh, user}` |
 | POST | `/api/auth/refresh/` | refresh token |
-| GET/PATCH | `/api/auth/me/` | user |
+| GET/PATCH | `/api/auth/me/` | user — profile updates (role is immutable once chosen) |
 | GET | `/api/sessions/` | public — `?when=upcoming\|past`, `?mine=1`, `?q=` |
 | GET | `/api/sessions/{id}/` | public — includes `my_booking` for the signed-in viewer |
 | POST/PATCH/DELETE | `/api/sessions/{id}/` | creator, own sessions only |
@@ -177,29 +161,27 @@ Migrations run automatically on backend start, before Gunicorn binds.
 
 ---
 
-## Design system
+## Design System & UI
 
-The frontend implements the supplied Stitch export in
-`stitch_session_management_portal/`. Its tokens are transcribed under their own
-names into `frontend/tailwind.config.js` — colours (`primary #00685f`,
-the `surface-container-*` tonal ramp, `on-*` pairs), the ten-step type scale
-(`text-headline-lg`, `text-body-md`, `text-label-sm`…), the 4px spacing rhythm
-(`p-md`, `gap-gutter`, `px-margin_desktop`), three elevation levels and the
-shape scale — so a class in the export means the same thing in this codebase.
-Typeface: Plus Jakarta Sans.
+The frontend features a sleek, human-crafted design with solid typography, clean glassmorphic components, and fluid responsiveness:
+
+- **Hero & Headlines**: Solid typography (`text-emerald-400`) without artificial gradient text or ambient blur orbs.
+- **Top Navigation Bar**: Floating translucent header with pill navigation tabs, subtle search input, and profile account menu.
+- **Auth Shell**: Centered glassmorphic modal over a full-viewport cinematic background video stream.
+- **Role Chooser**: High-contrast role cards for both light and dark backgrounds with permanent role locking.
 
 | Design screen | Implemented as |
 |---|---|
-| `landing_sign_in` | `pages/Login.jsx` — split brand panel + auth card |
+| `landing_sign_in` | `pages/Login.jsx` & `pages/Signup.jsx` — centered glass auth card with Google/GitHub SSO + Password auth |
 | `oauth_callback_state` | `pages/AuthCallback.jsx` — loading and failure cards |
-| `session_catalog` | `pages/Catalog.jsx` — filter pills, cover art, availability badges |
+| `session_catalog` | `pages/Catalog.jsx` — full-bleed video hero, filter pills, cover art, solid typography |
 | `session_detail_page` | `pages/SessionDetail.jsx` — two-column with sticky booking sidebar |
 | `booking_confirmation_feedback` | confirmation modal + bottom-right error toast (`components/Toast.jsx`) |
 | `my_bookings` | `pages/MyBookings.jsx` — Active/Past tabs |
 | `creator_dashboard` | `pages/CreatorDashboard.jsx` — stat cards + session table with seat meters |
 | `session_bookings_view` | `pages/SessionAttendees.jsx` — attendee roster with search |
 | `create_edit_session_form` | `pages/SessionForm.jsx` — floating-label form |
-| `profile_page` | `pages/Profile.jsx` — bento layout + role switcher |
+| `profile_page` | `pages/Profile.jsx` — profile settings with locked role badge |
 | `403_401_error_state` | `AccessDenied` in `App.jsx`, reused for 403 and 404 |
 | `empty_states_catalog_bookings` | `EmptyState` in `components/ui.jsx` |
 

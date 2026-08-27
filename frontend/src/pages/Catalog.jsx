@@ -52,7 +52,7 @@ function Hero({ sessions, query, onSearch }) {
   return (
     <>
       {/* 100% Edge-to-Edge Full Screen Width Hero Banner */}
-      <div className="relative w-full min-h-[580px] overflow-hidden bg-slate-950 px-6 py-16 text-center text-white shadow-2xl md:py-24 animate-fade-in-up">
+      <div className="relative w-full min-h-[540px] overflow-hidden bg-slate-950 px-6 py-16 text-center text-white shadow-xl md:py-24">
         {/* Full-Width Background Video Stream */}
         <video
           ref={videoRef}
@@ -60,7 +60,7 @@ function Hero({ sessions, query, onSearch }) {
           loop
           muted={isMuted}
           playsInline
-          className="absolute inset-0 h-full w-full object-cover opacity-50 filter brightness-90 saturate-125 transition-all duration-1000 scale-105"
+          className="absolute inset-0 h-full w-full object-cover opacity-40 filter brightness-90 saturate-110"
           poster="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80"
         >
           <source
@@ -73,46 +73,41 @@ function Hero({ sessions, query, onSearch }) {
           />
         </video>
 
-        {/* Dynamic Overlay Gradient & Radial Glow */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/85 to-slate-950/95 backdrop-blur-[2px]" />
-        <div className="pointer-events-none absolute top-1/2 left-1/2 h-[450px] w-[650px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-500/10 blur-[130px]" />
+        {/* Clean Vignette Overlay */}
+        <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[1px]" />
 
         <div className="relative z-10 mx-auto max-w-4xl">
-          {/* Animated Badge */}
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/15 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-emerald-300 backdrop-blur-md shadow-lg animate-float">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
-            </span>
-            Live Masterclasses & Workshops
+          {/* Live Badge */}
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/80 px-3.5 py-1 text-xs font-semibold text-emerald-300">
+            <span className="h-2 w-2 rounded-full bg-emerald-400" />
+            Live Masterclasses &amp; Workshops
           </div>
 
-          {/* Headline */}
-          <h1 className="text-4xl font-extrabold tracking-tight text-white md:text-6xl lg:text-[3.75rem] leading-[1.12]">
-            Small sessions, taught by people{' '}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-teal-200 to-white drop-shadow-sm">
+          {/* Solid Typography Headline */}
+          <h1 className="text-4xl font-extrabold tracking-tight text-white md:text-6xl lg:text-[3.5rem] leading-tight">
+            Small live sessions, taught by experts{' '}
+            <span className="text-emerald-400">
               doing the work.
             </span>
           </h1>
 
-          {/* Subtitle */}
-          <p className="mx-auto mt-5 max-w-2xl text-base text-slate-300 md:text-xl leading-relaxed font-normal">
-            Join intimate masterclasses and focused workshops led by industry practitioners.
-            Level up your skills with real-world knowledge.
+          {/* Human Subtitle */}
+          <p className="mx-auto mt-4 max-w-2xl text-base text-slate-300 md:text-lg leading-relaxed font-normal">
+            Learn directly from practitioners through interactive live workshops. Get real-time feedback, build real projects, and level up your skills.
           </p>
 
-          {/* Glassmorphism Search Bar */}
+          {/* Clean Solid Search Bar */}
           <form
             onSubmit={(event) => event.preventDefault()}
-            className="mx-auto mt-10 flex max-w-xl items-center gap-2 rounded-2xl border border-white/25 bg-slate-900/80 p-2.5 shadow-2xl backdrop-blur-xl transition-all duration-300 focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-400/30 hover:border-white/40"
+            className="mx-auto mt-8 flex max-w-xl items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/90 p-2 shadow-xl focus-within:border-emerald-500"
           >
             <div className="flex pl-3 text-slate-400">
-              <Icon name="search" size={22} />
+              <Icon name="search" size={20} />
             </div>
             <input
               value={query}
               onChange={(event) => onSearch(event.target.value)}
-              placeholder="What do you want to learn?"
+              placeholder="Search by topic, skill, or host..."
               aria-label="Search sessions"
               className="w-full bg-transparent px-2 py-2 text-base text-white placeholder:text-slate-400 focus:outline-none"
             />
@@ -121,49 +116,49 @@ function Hero({ sessions, query, onSearch }) {
                 type="button"
                 onClick={() => onSearch('')}
                 aria-label="Clear search"
-                className="shrink-0 rounded-full p-1 text-slate-400 hover:bg-white/10 hover:text-white"
+                className="shrink-0 rounded-full p-1 text-slate-400 hover:bg-slate-800 hover:text-white"
               >
                 <Icon name="x" size={18} />
               </button>
             )}
             <Button
               type="submit"
-              className="shrink-0 rounded-xl bg-[#164e3d] px-7 py-3.5 text-sm font-semibold text-white shadow-xl transition-all hover:bg-emerald-700 hover:scale-105 active:scale-95"
+              className="shrink-0 rounded-lg bg-[#164e3d] px-6 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
             >
               Find Sessions
             </Button>
           </form>
 
           {/* Interactive Play Preview Button */}
-          <div className="mt-8 flex items-center justify-center gap-3">
+          <div className="mt-7 flex items-center justify-center gap-3">
             <button
               onClick={() => setShowModal(true)}
-              className="group inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-xs font-semibold text-white shadow-xl backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105 active:scale-95"
+              className="group inline-flex items-center gap-2.5 rounded-full border border-slate-700 bg-slate-900/80 px-5 py-2.5 text-xs font-semibold text-white shadow-md hover:bg-slate-800 hover:border-slate-600"
             >
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-slate-950 shadow-md transition-transform group-hover:scale-110">
-                <Icon name="play" size={14} className="ml-0.5 fill-current" />
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-slate-950">
+                <Icon name="play" size={12} className="ml-0.5 fill-current" />
               </span>
-              Watch Masterclass Preview Video
+              Watch Masterclass Preview
             </button>
             <button
               onClick={toggleMute}
-              className="rounded-full border border-white/20 bg-white/10 p-3 text-white hover:bg-white/20 backdrop-blur-md transition-transform hover:scale-105"
+              className="rounded-full border border-slate-700 bg-slate-900/80 p-2.5 text-slate-300 hover:bg-slate-800 hover:text-white"
               title={isMuted ? 'Unmute video audio' : 'Mute video audio'}
             >
-              <Icon name={isMuted ? 'volume-x' : 'volume-2'} size={18} />
+              <Icon name={isMuted ? 'volume-x' : 'volume-2'} size={16} />
             </button>
           </div>
 
-          {/* Glassmorphic Stats Container */}
-          <div className="mt-14 rounded-2xl border border-white/15 bg-slate-900/65 p-6 shadow-2xl backdrop-blur-md">
-            <dl className="grid grid-cols-1 divide-y divide-white/10 md:grid-cols-3 md:divide-y-0 md:divide-x">
+          {/* Solid Clean Stats Container */}
+          <div className="mt-12 rounded-xl border border-slate-800 bg-slate-900/90 p-5 shadow-lg">
+            <dl className="grid grid-cols-1 divide-y divide-slate-800 md:grid-cols-3 md:divide-y-0 md:divide-x">
               {stats.map((stat) => (
-                <div key={stat.label} className="flex flex-col items-center py-3 md:py-0">
+                <div key={stat.label} className="flex flex-col items-center py-2 md:py-0">
                   <dt className="sr-only">{stat.label}</dt>
                   <dd className="text-3xl font-extrabold text-white md:text-4xl tracking-tight">
                     {stat.value}
                   </dd>
-                  <span className="mt-1 text-xs font-bold tracking-wider text-emerald-300 uppercase">
+                  <span className="mt-1 text-xs font-bold tracking-wider text-emerald-400 uppercase">
                     {stat.label}
                   </span>
                 </div>

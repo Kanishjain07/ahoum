@@ -218,6 +218,25 @@ every test passed before and after, because the tests asserted the *API* was
 right about conflicts — and it was. It was the client that was asking a
 question the API could not answer.
 
+---
+
+## 7. Navbar layout whitespace gap and unsaved `.env` environment variables
+
+**Symptom.**
+1. Clicking "Continue with Google" returned `google sign-in is not configured on this server` even after environment configuration.
+2. A large whitespace top margin gap (~140px) appeared above the page content below the sticky navbar.
+
+**Diagnosis & Root Cause.**
+1. Unsaved `.env` edits: Docker Compose reads `.env` directly from disk. Edits in IDE tabs must be saved to disk (`Ctrl + S`) before rebuilding the container (`docker compose up -d --build backend`).
+2. Layout gap: `<main>` had `pt-[72px]` while `<header>` was styled as `sticky top-0`, creating a duplicate top padding gap.
+
+**Fix & Verification.**
+1. Saved `.env` to disk and verified provider configuration endpoints via `GET /api/auth/providers/`.
+2. Updated `<main>` in `Layout.jsx` to `pt-6` with tight spacing below the sticky header.
+3. Verified clean alignment on `http://localhost:8080` across desktop and mobile viewports.
+
+---
+
 ## Verification summary
 
 | Check | Command | Result |
@@ -228,5 +247,5 @@ question the API could not answer.
 | Race, live HTTP, 15 clients / 3 seats | `python scripts/race_check.py --seats 3 --clients 15` | `3 x 201`, `12 x 409`, PASS |
 | Data survives container restart | `docker compose down && docker compose up -d` | session count 2 → 2 |
 | SPA deep-link routing | `curl -o /dev/null -w '%{http_code}' localhost:8080/sessions/1` | 200 |
-| OAuth misconfiguration is graceful | `curl localhost:8080/api/auth/github/login-url/` | 503 `oauth_unconfigured` |
-| Every screen renders with real data | headless Chrome over CDP, seeded via `scripts/seed_demo.py` | catalog, detail, bookings, dashboard, attendees, form, profile, empty states — desktop 1440px and mobile 390px |
+| OAuth & Password Auth | `POST /api/auth/login/` & `GET /api/auth/providers/` | 200 OK |
+| Every screen renders with real data | Chrome against seeded data | auth, catalog, detail, bookings, dashboard, profile — desktop 1440px and mobile 390px |

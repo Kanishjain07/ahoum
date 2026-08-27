@@ -45,36 +45,42 @@ export default function Welcome() {
 
   return (
     <FocusLayout>
-      <Card className="w-full max-w-xl p-lg shadow-md md:p-xl">
-        <div className="mb-lg flex items-center gap-md">
-          <Avatar user={user} size={56} />
+      <div className="w-full max-w-xl rounded-3xl border border-slate-200/90 bg-white p-8 md:p-10 shadow-2xl animate-fade-in-up">
+        <div className="mb-6 flex items-center gap-4">
+          <Avatar user={user} size={56} className="ring-2 ring-emerald-600/30" />
           <div>
-            <p className="text-label-sm uppercase tracking-wider text-primary">
+            <span className="inline-block rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#164e3d]">
               Welcome to BookSync
-            </p>
-            <h1 className="text-headline-md text-on-surface">
+            </span>
+            <h1 className="mt-1 text-2xl font-extrabold text-slate-900 md:text-3xl">
               Nice to meet you, {(user.display_name || user.username).split(' ')[0]}
             </h1>
           </div>
         </div>
 
-        <p className="mb-lg text-body-md text-on-surface-variant">
+        <p className="mb-6 text-sm text-slate-600 leading-relaxed">
           One last thing: how do you plan to use BookSync? This decides what you
           see first — you can change it any time in account settings.
         </p>
 
         {error && (
-          <div className="mb-md">
+          <div className="mb-4">
             <Banner kind="error">{error}</Banner>
           </div>
         )}
 
-        <RoleChooser value={role} onChange={setRole} className="mb-xl" />
+        <RoleChooser value={role} onChange={setRole} className="mb-8" />
 
-        <Button size="lg" onClick={confirm} loading={busy} iconAfter="arrow-right">
+        <Button
+          size="lg"
+          onClick={confirm}
+          loading={busy}
+          className="w-full rounded-xl bg-[#164e3d] py-3.5 text-sm font-bold text-white shadow-xl hover:bg-emerald-800 transition-transform active:scale-95"
+          iconAfter="arrow-right"
+        >
           Continue as {role === 'creator' ? 'a creator' : 'a user'}
         </Button>
-      </Card>
+      </div>
     </FocusLayout>
   );
 }

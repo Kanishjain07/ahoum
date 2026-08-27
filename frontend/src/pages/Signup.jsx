@@ -55,33 +55,27 @@ export default function Signup() {
     <AuthShell
       eyebrow="Create your account"
       headline="Book it, or host it."
-      points={POINTS}
       footer={
         <>
           Already have an account?{' '}
-          <Link to="/login" state={{ from }} className="font-semibold text-emerald-800 hover:underline">
+          <Link to="/login" state={{ from }} className="font-semibold text-emerald-400 hover:underline">
             Sign in
           </Link>
         </>
       }
     >
-      <div className="mb-lg">
-        <h2 className="text-2xl font-bold text-slate-900">Get started</h2>
-        <p className="mt-xs text-sm text-slate-500">
-          First, how do you want to use BookSync? You can change this later.
-        </p>
+      <div className="mb-4">
+        <RoleChooser value={role} onChange={setRole} />
       </div>
 
-      <RoleChooser value={role} onChange={setRole} className="mb-lg" />
-
       {(auth.error || passError) && (
-        <div className="mb-md">
+        <div className="mb-4">
           <Banner kind="error">{auth.error || passError}</Banner>
         </div>
       )}
 
       {auth.ready && auth.providers.length > 0 && (
-        <div className="space-y-sm mb-md">
+        <div className="space-y-2.5 mb-4">
           {auth.providers.map((provider) => (
             <ProviderButton
               key={provider.key}
@@ -96,7 +90,7 @@ export default function Signup() {
         </div>
       )}
 
-      <form onSubmit={handlePasswordSubmit} className="space-y-md">
+      <form onSubmit={handlePasswordSubmit} className="space-y-4">
         {auth.providers.length > 0 && <Divider>or sign up with password</Divider>}
         <Field
           label="Username / ID"
@@ -120,7 +114,7 @@ export default function Signup() {
         <Button
           type="submit"
           size="lg"
-          className="bg-[#164e3d] text-white hover:bg-emerald-800"
+          className="w-full rounded-xl bg-emerald-500 py-3 text-sm font-bold text-slate-950 shadow-lg hover:bg-emerald-400 transition-transform active:scale-95"
           loading={busy}
           disabled={!username.trim() || !password.trim() || busy}
           iconAfter="arrow-right"
@@ -128,44 +122,6 @@ export default function Signup() {
           Create {role === 'creator' ? 'creator' : 'user'} account
         </Button>
       </form>
-
-      {auth.devSignIn && (
-        <>
-          <Divider>or local dev handle</Divider>
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              auth
-                .devLogin()
-                .then((destination) => destination && navigate(destination, { replace: true }));
-            }}
-            className="space-y-md"
-          >
-            <Field
-              label="Dev Handle"
-              value={auth.handle}
-              onChange={(event) => auth.setHandle(event.target.value)}
-              hint="Available while DEV_FAKE_OAUTH=True."
-            />
-            <Button
-              type="submit"
-              size="lg"
-              variant="outline"
-              loading={auth.pending === 'dev'}
-              disabled={!auth.handle.trim() || Boolean(auth.pending)}
-              iconAfter="arrow-right"
-            >
-              Quick Dev Sign-in as {auth.handle.trim() || 'user'}
-            </Button>
-          </form>
-        </>
-      )}
-
-      <p className="mt-lg flex items-start gap-xs text-xs text-slate-500">
-        <Icon name="info" size={14} className="mt-0.5 shrink-0" />
-        Your role is applied when the account is created. Sending it again later
-        will not change an existing account.
-      </p>
     </AuthShell>
   );
 }

@@ -47,31 +47,23 @@ export default function Login() {
     <AuthShell
       eyebrow="Welcome back"
       headline="Your next session is one click away."
-      points={POINTS}
       footer={
         <>
           New here?{' '}
-          <Link to="/signup" state={{ from }} className="font-semibold text-emerald-800 hover:underline">
+          <Link to="/signup" state={{ from }} className="font-semibold text-emerald-400 hover:underline">
             Create an account
           </Link>
         </>
       }
     >
-      <div className="mb-lg text-center">
-        <h2 className="text-2xl font-bold text-slate-900">Sign in</h2>
-        <p className="mt-xs text-sm text-slate-500">
-          Enter your ID/Email and password to continue.
-        </p>
-      </div>
-
       {(auth.error || passError) && (
-        <div className="mb-md">
+        <div className="mb-4">
           <Banner kind="error">{auth.error || passError}</Banner>
         </div>
       )}
 
       {auth.ready && auth.providers.length > 0 && (
-        <div className="space-y-sm mb-md">
+        <div className="space-y-2.5 mb-4">
           {auth.providers.map((provider) => (
             <ProviderButton
               key={provider.key}
@@ -86,7 +78,7 @@ export default function Login() {
         </div>
       )}
 
-      <form onSubmit={handlePasswordSubmit} className="space-y-md">
+      <form onSubmit={handlePasswordSubmit} className="space-y-4">
         {auth.providers.length > 0 && <Divider>or sign in with password</Divider>}
         <Field
           label="Username or Email"
@@ -104,7 +96,7 @@ export default function Login() {
         <Button
           type="submit"
           size="lg"
-          className="bg-[#164e3d] text-white hover:bg-emerald-800"
+          className="w-full rounded-xl bg-emerald-500 py-3 text-sm font-bold text-slate-950 shadow-lg hover:bg-emerald-400 transition-transform active:scale-95"
           loading={busy}
           disabled={!username.trim() || !password.trim() || busy}
           iconAfter="arrow-right"
@@ -112,36 +104,6 @@ export default function Login() {
           Sign in
         </Button>
       </form>
-
-      {auth.devSignIn && (
-        <>
-          <Divider>or local dev handle</Divider>
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              auth.devLogin().then((destination) => destination && navigate(destination, { replace: true }));
-            }}
-            className="space-y-md"
-          >
-            <Field
-              label="Dev Handle"
-              value={auth.handle}
-              onChange={(event) => auth.setHandle(event.target.value)}
-              hint="Available while DEV_FAKE_OAUTH=True."
-            />
-            <Button
-              type="submit"
-              size="lg"
-              variant="outline"
-              loading={auth.pending === 'dev'}
-              disabled={!auth.handle.trim() || Boolean(auth.pending)}
-              iconAfter="arrow-right"
-            >
-              Quick Dev Sign-in as {auth.handle.trim() || 'user'}
-            </Button>
-          </form>
-        </>
-      )}
     </AuthShell>
   );
 }
