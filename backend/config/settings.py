@@ -63,16 +63,31 @@ TEMPLATES = [
     }
 ]
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("POSTGRES_DB", "ahoum"),
-        "USER": env("POSTGRES_USER", "ahoum"),
-        "PASSWORD": env("POSTGRES_PASSWORD", "ahoum"),
-        "HOST": env("POSTGRES_HOST", "localhost"),
-        "PORT": env("POSTGRES_PORT", "5432"),
+database_url = env("DATABASE_URL") or env("POSTGRESQL_URL")
+if database_url:
+    from urllib.parse import unquote, urlparse
+    url = urlparse(database_url)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": unquote(url.path.lstrip("/")),
+            "USER": unquote(url.username or ""),
+            "PASSWORD": unquote(url.password or ""),
+            "HOST": url.hostname or "localhost",
+            "PORT": str(url.port or 5432),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": env("POSTGRES_DB", "ahoum"),
+            "USER": env("POSTGRES_USER", "ahoum"),
+            "PASSWORD": env("POSTGRES_PASSWORD", "ahoum"),
+            "HOST": env("POSTGRES_HOST", "localhost"),
+            "PORT": env("POSTGRES_PORT", "5432"),
+        }
+    }
 
 AUTH_USER_MODEL = "accounts.User"
 AUTH_PASSWORD_VALIDATORS = []
