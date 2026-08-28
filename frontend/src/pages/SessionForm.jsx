@@ -83,14 +83,22 @@ export default function SessionForm() {
   }
 
   return (
-    <FocusLayout>
-      <div className="w-full max-w-2xl py-lg">
-        <Card className="overflow-hidden">
-          <div className="border-b border-surface-variant bg-surface-container-low/50 px-lg py-md">
-            <h2 className="text-headline-sm text-on-surface">
+    <Layout>
+      <div className="mx-auto w-full max-w-2xl py-6">
+        <Link
+          to="/creator"
+          className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-emerald-400 transition-colors"
+        >
+          <Icon name="arrow-left" size={16} />
+          Back to Creator Dashboard
+        </Link>
+
+        <Card className="overflow-hidden border border-slate-200 bg-white shadow-xl rounded-2xl">
+          <div className="border-b border-slate-100 bg-slate-900 px-8 py-6 text-white">
+            <h2 className="text-2xl font-extrabold text-white">
               {id ? 'Edit session' : 'Create new session'}
             </h2>
-            <p className="mt-xs text-body-sm text-on-surface-variant">
+            <p className="mt-1 text-sm text-slate-400">
               Define the details for your booking slot. Capacity cannot be set below the seats
               already booked.
             </p>
@@ -100,7 +108,7 @@ export default function SessionForm() {
             <PageLoader />
           ) : (
             <>
-              <form id="session-form" onSubmit={submit} className="flex flex-col gap-lg p-lg">
+              <form id="session-form" onSubmit={submit} className="flex flex-col gap-6 p-8">
                 {error && <Banner kind="error" title="Could not save">{error}</Banner>}
 
                 <Field label="Session title" required value={form.title} onChange={update('title')} />
@@ -121,19 +129,19 @@ export default function SessionForm() {
                     onChange={update('cover_url')}
                     hint="Leave empty to use a generated gradient cover."
                   />
-                  <div className="mt-sm flex items-center gap-md">
+                  <div className="mt-3 flex items-center gap-4">
                     <Cover
                       session={{ id: Number(id) || 0, cover_url: form.cover_url }}
-                      className="h-16 w-28 shrink-0 rounded-lg border border-surface-variant"
+                      className="h-16 w-28 shrink-0 rounded-lg border border-slate-200 shadow-sm"
                     />
-                    <span className="flex items-center gap-xs text-label-sm text-on-surface-variant">
+                    <span className="flex items-center gap-2 text-xs font-semibold text-slate-600">
                       <Icon name="image" size={16} />
                       Cover preview
                     </span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-lg md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <Field
                     label="Starts at"
                     type="datetime-local"
@@ -172,11 +180,11 @@ export default function SessionForm() {
                 </div>
               </form>
 
-              <div className="flex justify-end gap-md border-t border-surface-variant bg-surface-container-low px-lg py-md">
+              <div className="flex items-center justify-end gap-3 border-t border-slate-100 bg-slate-50 px-8 py-4">
                 <Button type="button" variant="ghost" onClick={() => navigate(-1)}>
                   Cancel
                 </Button>
-                <Button type="submit" form="session-form" loading={busy} icon="check">
+                <Button type="submit" form="session-form" loading={busy} icon="check" className="bg-[#10b981] hover:bg-[#059669] text-slate-950 font-bold px-6">
                   Save session
                 </Button>
               </div>
@@ -184,6 +192,6 @@ export default function SessionForm() {
           )}
         </Card>
       </div>
-    </FocusLayout>
+    </Layout>
   );
 }

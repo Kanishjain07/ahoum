@@ -385,10 +385,10 @@ export default function Layout({ children, wide = false, fullBleed = false }) {
 /** Focused, single-task shell (sign-in, OAuth callback, errors): no nav chrome. */
 export function FocusLayout({ children }) {
   return (
-    <div className="relative flex min-h-screen flex-col bg-background overflow-x-hidden">
+    <div className="relative flex min-h-screen flex-col bg-[#070D18] overflow-x-hidden text-white">
       {/* Background glow for focus layouts */}
-      <div className="pointer-events-none fixed top-1/3 left-1/2 -z-10 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-primary/15 via-teal-400/10 to-secondary/15 blur-[140px]" />
-      <header className="flex h-[72px] shrink-0 items-center border-b border-surface-variant/80 bg-surface/90 backdrop-blur-md px-margin_mobile md:px-margin_desktop">
+      <div className="pointer-events-none fixed top-1/3 left-1/2 -z-10 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-500/10 blur-[140px]" />
+      <header className="flex h-[72px] shrink-0 items-center border-b border-white/10 bg-[#0B131F] px-margin_mobile md:px-margin_desktop">
         <Brand />
       </header>
       <main className="flex flex-grow items-center justify-center p-margin_mobile md:p-margin_desktop relative z-10">
