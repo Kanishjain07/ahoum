@@ -7,22 +7,27 @@ import { Banner, Button, Card, Cover, Field, PageLoader } from '../components/ui
 
 import { api } from '../lib/api';
 
-const EMPTY = {
-  title: '',
-  description: '',
-  cover_url: '',
-  starts_at: '',
-  duration_minutes: 60,
-  capacity: 10,
-  price_dollars: '0',
-};
-
 // <input type="datetime-local"> speaks local wall-clock time with no zone;
 // the API speaks ISO 8601 UTC. Convert explicitly in both directions.
 function toLocalInput(iso) {
   const date = new Date(iso);
   return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
 }
+
+function defaultFutureTime() {
+  const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  return toLocalInput(tomorrow.toISOString());
+}
+
+const EMPTY = {
+  title: '',
+  description: '',
+  cover_url: '',
+  starts_at: defaultFutureTime(),
+  duration_minutes: 60,
+  capacity: 10,
+  price_dollars: '0',
+};
 
 export default function SessionForm() {
   const { id } = useParams();
@@ -145,6 +150,7 @@ export default function SessionForm() {
                   <Field
                     label="Starts at"
                     type="datetime-local"
+                    min={toLocalInput(new Date().toISOString())}
                     required
                     value={form.starts_at}
                     onChange={update('starts_at')}
