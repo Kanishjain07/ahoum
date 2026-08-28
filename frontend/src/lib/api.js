@@ -28,6 +28,8 @@ export class ApiError extends Error {
 
 let refreshInFlight = null;
 
+const BASE_URL = import.meta.env.VITE_API_URL || '';
+
 async function refreshAccessToken() {
   // Collapse parallel 401s into one refresh call, otherwise rotation
   // invalidates the refresh token mid-flight for the other requests.
@@ -35,7 +37,7 @@ async function refreshAccessToken() {
     refreshInFlight = (async () => {
       const refresh = tokens.refresh;
       if (!refresh) return false;
-      const res = await fetch('/api/auth/refresh/', {
+      const res = await fetch(`${BASE_URL}/api/auth/refresh/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refresh }),
@@ -60,7 +62,7 @@ async function request(path, { method = 'GET', body, retry = true } = {}) {
   if (body !== undefined) headers['Content-Type'] = 'application/json';
   if (tokens.access) headers.Authorization = `Bearer ${tokens.access}`;
 
-  const res = await fetch(`/api${path}`, {
+  const res = await fetch(`${BASE_URL}/api${path}`, {
     method,
     headers,
     body: body === undefined ? undefined : JSON.stringify(body),
