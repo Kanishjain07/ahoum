@@ -66,22 +66,6 @@ function AccountMenu() {
 
   return (
     <div ref={ref} className="relative flex items-center gap-3">
-      {user.role === 'creator' ? (
-        <Link
-          to="/creator/sessions/new"
-          className="rounded-full bg-[#10b981] px-5 py-2 text-xs font-bold text-slate-950 shadow-md hover:bg-[#34d399] transition-transform active:scale-95"
-        >
-          List a Session
-        </Link>
-      ) : (
-        <Link
-          to="/profile"
-          className="rounded-full bg-[#10b981] px-5 py-2 text-xs font-bold text-slate-950 shadow-md hover:bg-[#34d399] transition-transform active:scale-95"
-        >
-          List a Session
-        </Link>
-      )}
-
       <button
         onClick={() => setOpen((prev) => !prev)}
         aria-expanded={open}
