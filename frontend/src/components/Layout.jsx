@@ -309,6 +309,15 @@ function TopNav() {
         </form>
 
         <div className="flex items-center gap-3">
+          {user?.role === 'creator' && (
+            <Link
+              to="/creator/sessions/new"
+              className="hidden md:inline-flex items-center gap-1.5 rounded-full bg-[#10b981] px-4 py-2 text-xs font-bold text-slate-950 transition-all hover:bg-[#059669] hover:shadow-lg shadow-emerald-900/30"
+            >
+              <Icon name="plus" size={14} />
+              Create session
+            </Link>
+          )}
           <NotificationsMenu />
           <AccountMenu />
         </div>

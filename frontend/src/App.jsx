@@ -65,16 +65,11 @@ function RequireAuth({ children, creatorOnly = false }) {
           <AccessDenied
             title="Creator access required"
             code="403 Forbidden"
-            body="Publishing sessions is limited to creator accounts. Switch your role in account settings — the API enforces this on every write, whatever the UI shows."
+            body="Publishing and managing live sessions is limited to Creator accounts."
             actions={
-              <>
-                <Button as={Link} to="/profile" icon="user">
-                  Go to account settings
-                </Button>
-                <Button as={Link} to="/" variant="outline" icon="compass">
-                  Browse sessions
-                </Button>
-              </>
+              <Button as={Link} to="/" icon="compass">
+                Back to catalog
+              </Button>
             }
           />
         </div>
