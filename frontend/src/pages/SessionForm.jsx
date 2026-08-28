@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Icon from '../components/Icon';
-import { FocusLayout } from '../components/Layout';
+import Layout from '../components/Layout';
 import { useToast } from '../components/Toast';
 import { Banner, Button, Card, Cover, Field, PageLoader } from '../components/ui';
 
